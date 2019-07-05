@@ -1,5 +1,7 @@
 package com.amazurok.swingy.model.characters;
 
+import com.amazurok.swingy.model.artifacts.Artifact;
+import com.amazurok.swingy.model.map.Coordinates;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,12 +9,13 @@ import lombok.Setter;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class Person {
-//    protected ArrayList<Artefact> artefacts;
+    protected ArrayList<Artifact> artifacts;
     @NotNull
     protected String name;
 
@@ -36,6 +39,5 @@ public class Person {
     protected int hp;
 
     @NotNull
-    @Valid
     protected Coordinates coordinates;
 }
