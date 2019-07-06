@@ -1,26 +1,24 @@
 package com.amazurok.swingy.model.characters;
 
-import com.amazurok.swingy.model.artifacts.Artifact;
+import com.amazurok.swingy.anotation.ValidateType;
 import com.amazurok.swingy.model.map.Coordinates;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class Person {
-    protected ArrayList<Artifact> artifacts;
+
     @NotNull
     protected String name;
 
     @NotNull
-//    @ValidateType(types = {"Gunman", "Swordsman", "KungFuMaster", "Villain"}, message = "Invalid class")
+    @ValidateType(types = {"Elf", "Knight", "Magician", "Orc"})
     protected String type;
 
     @Min(value = 1, message = "Level cannot be lower than 1.")

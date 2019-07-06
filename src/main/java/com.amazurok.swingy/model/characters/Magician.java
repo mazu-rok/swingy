@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Orc extends Person {
+public class Magician extends Person {
 
     @NonNull
     private Weapon weapon;
@@ -21,12 +21,12 @@ public class Orc extends Person {
     @NonNull
     private Helm helm;
 
-    public Orc(String name, int level, int experience, int attack, int defense, int hp, Coordinates coordinates) {
-        super(name, Orc.class.getSimpleName(), level, experience, attack, defense, hp, coordinates);
+    public Magician(String name, int level, int experience, int attack, int defense, int hp, Coordinates coordinates) {
+        super(name, Magician.class.getSimpleName(), level, experience, attack, defense, hp, coordinates);
     }
 
-    public Orc(String name, Coordinates coordinates)
+    public Magician(String name, Coordinates coordinates)
     {
-        super(name, Orc.class.getSimpleName(), 1, 0, 40, 50, 900, coordinates);
+        super(name, Magician.class.getSimpleName(), 1, 0, 90, 15, 400, coordinates);
     }
 }

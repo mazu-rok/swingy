@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 
 @Getter
 @Setter
-public class Weapon {
+public class Helm {
 
     @Min(value = 1)
     private int power;

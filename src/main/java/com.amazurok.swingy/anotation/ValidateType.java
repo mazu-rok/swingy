@@ -5,7 +5,8 @@ import javax.validation.Payload;
 
 @Constraint(validatedBy = {ValidateTypeConstraint.class})
 public @interface ValidateType {
-    String[] types;
+
+    String[] types();
 
     String message() default "Invalid person type";
 
