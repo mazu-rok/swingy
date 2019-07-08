@@ -1,7 +1,12 @@
 package com.amazurok.swingy.util;
 
 import com.amazurok.swingy.exceptions.IllegalInputException;
-import com.amazurok.swingy.model.characters.*;
+import com.amazurok.swingy.model.characters.Elf;
+import com.amazurok.swingy.model.characters.Enemy;
+import com.amazurok.swingy.model.characters.Knight;
+import com.amazurok.swingy.model.characters.Magician;
+import com.amazurok.swingy.model.characters.Orc;
+import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.model.map.Coordinates;
 
 public class CharacterFactory {
