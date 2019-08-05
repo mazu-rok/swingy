@@ -10,19 +10,19 @@ import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.model.map.Coordinates;
 
 public class CharacterFactory {
-    public static Person createPerson(String name, String type, int level, int experience, int attack, int defense, int hp,
+    public static Person createPerson(String name, String type, int level, int attack, int defense, int hp,
                                       Coordinates coordinates) throws IllegalInputException {
         switch (type) {
             case "Elf":
-                return new Elf(name, level, experience, attack, defense, hp, coordinates);
+                return new Elf(name, level, attack, defense, hp, coordinates);
             case "Knight":
-                return new Knight(name, level, experience, attack, defense, hp, coordinates);
+                return new Knight(name, level, attack, defense, hp, coordinates);
             case "Magician":
-                return new Magician(name, level, experience, attack, defense, hp, coordinates);
+                return new Magician(name, level, attack, defense, hp, coordinates);
             case "Orc":
-                return new Orc(name, level, experience, attack, defense, hp, coordinates);
+                return new Orc(name, level, attack, defense, hp, coordinates);
             case "Enemy":
-                return new Enemy(name, level, experience, attack, defense, hp, coordinates);
+                return new Enemy(name, level, attack, defense, hp, coordinates);
             default:
                 throw new IllegalInputException(String.format("Type '%s' is not supported", type));
         }

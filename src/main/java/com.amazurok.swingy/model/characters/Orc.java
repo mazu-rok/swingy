@@ -9,8 +9,11 @@ import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class Orc extends Person {
+
+    private static int DEFAULT_ATTACK = 40;
+    private static int DEFAULT_DEFENSE = 50;
+    private static int DEFAULT_HP = 900;
 
     @NonNull
     private Weapon weapon;
@@ -21,12 +24,27 @@ public class Orc extends Person {
     @NonNull
     private Helm helm;
 
-    public Orc(String name, int level, int experience, int attack, int defense, int hp, Coordinates coordinates) {
-        super(name, Orc.class.getSimpleName(), level, experience, attack, defense, hp, coordinates);
+    public Orc(String name, int level, int attack, int defense, int hp, Coordinates coordinates) {
+        super(name, Orc.class.getSimpleName(), level, (int)(level*1000 + Math.pow(level - 1, 2) * 450), attack, defense, hp, coordinates);
     }
 
     public Orc(String name, Coordinates coordinates)
     {
-        super(name, Orc.class.getSimpleName(), 1, 0, 40, 50, 900, coordinates);
+        super(name, Orc.class.getSimpleName(), 1, 0, DEFAULT_ATTACK, DEFAULT_DEFENSE, DEFAULT_HP, coordinates);
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+        this.attack = DEFAULT_ATTACK + (DEFAULT_ATTACK * (weapon.getPower() / 100));
+    }
+
+    public void setArmor(Armor armor) {
+        this.armor = armor;
+        this.defense = DEFAULT_DEFENSE + (DEFAULT_DEFENSE * (armor.getPower() / 100));
+    }
+
+    public void setHelm(Helm helm) {
+        this.helm = helm;
+        this.hp = DEFAULT_HP + (DEFAULT_HP * (weapon.getPower() / 100));
     }
 }

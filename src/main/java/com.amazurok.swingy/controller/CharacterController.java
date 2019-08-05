@@ -21,10 +21,10 @@ public class CharacterController {
         this.person = CharacterFactory.createPerson(name, type, new Coordinates(map.getSize()/2, map.getSize()/2));
     }
 
-    public void createPerson(String name, String type, int level, int experience, int attack, int defense, int hp,
+    public void createPerson(String name, String type, int level, int attack, int defense, int hp,
                              Coordinates coordinates) throws IllegalInputException {
         this.map = new Map(level);
-        this.person = CharacterFactory.createPerson(name, type, level, experience, attack, defense, hp, coordinates);
+        this.person = CharacterFactory.createPerson(name, type, level, attack, defense, hp, coordinates);
     }
 
     public void createEnemy(Coordinates coordinates) throws IllegalInputException {
@@ -35,24 +35,6 @@ public class CharacterController {
         this.enemy = CharacterFactory.createPerson(names[name], "Enemy", coordinates);
     }
 
-    private void updatePerson() {
-        int level = person.getLevel();
-        for (int i = 0;; i++) {
-            if (this.person.getExperience() < (level*1000 + Math.pow(level - 1, 2) * 450)) {
-                level = i - 1;
-                break;
-            }
-        }
-        this.person =
-    }
 
-    private void setLevel(int level) {
-
-    }
-
-    private void setExperience(int experience) {
-        person.setExperience(person.getExperience() + experience);
-
-    }
 
 }

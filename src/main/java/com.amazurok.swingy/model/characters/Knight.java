@@ -21,8 +21,8 @@ public class Knight extends Person {
     @NonNull
     private Helm helm;
 
-    public Knight(String name, int level, int experience, int attack, int defense, int hp, Coordinates coordinates) {
-        super(name, Knight.class.getSimpleName(), level, experience, attack, defense, hp, coordinates);
+    public Knight(String name, int level, int attack, int defense, int hp, Coordinates coordinates) {
+        super(name, Knight.class.getSimpleName(), level, (int)(level*1000 + Math.pow(level - 1, 2) * 450), attack, defense, hp, coordinates);
     }
 
     public Knight(String name, Coordinates coordinates)

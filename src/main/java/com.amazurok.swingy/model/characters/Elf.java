@@ -21,8 +21,8 @@ public class Elf extends Person {
     @NonNull
     private Helm helm;
 
-    public Elf(String name, int level, int experience, int attack, int defense, int hp, Coordinates coordinates) {
-        super(name, Elf.class.getSimpleName(), level, experience, attack, defense, hp, coordinates);
+    public Elf(String name, int level, int attack, int defense, int hp, Coordinates coordinates) {
+        super(name, Elf.class.getSimpleName(), level, (int)(level*1000 + Math.pow(level - 1, 2) * 450), attack, defense, hp, coordinates);
     }
 
     public Elf(String name, Coordinates coordinates)
