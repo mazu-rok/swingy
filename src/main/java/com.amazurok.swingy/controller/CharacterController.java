@@ -21,10 +21,9 @@ public class CharacterController {
         this.person = CharacterFactory.createPerson(name, type, new Coordinates(map.getSize()/2, map.getSize()/2));
     }
 
-    public void createPerson(String name, String type, int level, int attack, int defense, int hp,
-                             Coordinates coordinates) throws IllegalInputException {
+    public void createPerson(String name, String type, int level, int attack, int defense, int hp) throws IllegalInputException {
         this.map = new Map(level);
-        this.person = CharacterFactory.createPerson(name, type, level, attack, defense, hp, coordinates);
+        this.person = CharacterFactory.createPerson(name, type, level, attack, defense, hp, new Coordinates(map.getSize()/2, map.getSize()/2));
     }
 
     public void createEnemy(Coordinates coordinates) throws IllegalInputException {
