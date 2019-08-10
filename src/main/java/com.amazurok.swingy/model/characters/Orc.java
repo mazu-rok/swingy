@@ -6,7 +6,8 @@ import com.amazurok.swingy.model.artifacts.Weapon;
 import com.amazurok.swingy.model.map.Coordinates;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
+
+import java.util.UUID;
 
 @Getter
 public class Orc extends Person {
@@ -25,12 +26,12 @@ public class Orc extends Person {
     private Helm helm;
 
     public Orc(String name, int level, int attack, int defense, int hp, Coordinates coordinates) {
-        super(name, Orc.class.getSimpleName(), level, (int)(level*1000 + Math.pow(level - 1, 2) * 450), attack, defense, hp, coordinates);
+        super(UUID.randomUUID(), name, Orc.class.getSimpleName(), level, (int)(level*1000 + Math.pow(level - 1, 2) * 450), attack, defense, hp, coordinates);
     }
 
     public Orc(String name, Coordinates coordinates)
     {
-        super(name, Orc.class.getSimpleName(), 1, 0, DEFAULT_ATTACK, DEFAULT_DEFENSE, DEFAULT_HP, coordinates);
+        super(UUID.randomUUID(), name, Orc.class.getSimpleName(), 1, 0, DEFAULT_ATTACK, DEFAULT_DEFENSE, DEFAULT_HP, coordinates);
     }
 
     public void setWeapon(Weapon weapon) {

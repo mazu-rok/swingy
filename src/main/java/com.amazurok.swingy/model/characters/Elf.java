@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class Elf extends Person {
@@ -22,11 +24,15 @@ public class Elf extends Person {
     private Helm helm;
 
     public Elf(String name, int level, int attack, int defense, int hp, Coordinates coordinates) {
-        super(name, Elf.class.getSimpleName(), level, (int)(level*1000 + Math.pow(level - 1, 2) * 450), attack, defense, hp, coordinates);
+        super(UUID.randomUUID(), name, Elf.class.getSimpleName(), level, (int)(level*1000 + Math.pow(level - 1, 2) * 450), attack, defense, hp, coordinates);
     }
 
     public Elf(String name, Coordinates coordinates)
     {
-        super(name, Elf.class.getSimpleName(), 1, 0, 70, 25, 500 , coordinates);
+        super(UUID.randomUUID(), name, Elf.class.getSimpleName(), 1, 0, 70, 25, 500 , coordinates);
+    }
+
+    public Elf() {
+        super(UUID.randomUUID(), "", "", 1, 1, 1, 1, 1, new Coordinates(1, 1));
     }
 }

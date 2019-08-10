@@ -3,28 +3,28 @@ package com.amazurok.swingy.view;
 import com.amazurok.swingy.controller.CharacterController;
 import com.amazurok.swingy.exceptions.IllegalInputException;
 import com.amazurok.swingy.model.characters.Person;
-import com.amazurok.swingy.util.CharacterFactory;
+import com.amazurok.swingy.model.map.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleView implements WindowManager {
     private Logger log = LoggerFactory.getLogger(ConsoleView.class);
 
     private Scanner stdin;
-    CharacterController characterController = new CharacterController();
+    private CharacterController characterController;
 
-    ConsoleView() {
+    public ConsoleView(CharacterController characterController) {
+        this.characterController = characterController;
         stdin = new Scanner(System.in);
     }
 
     @Override
-    public void displayStartView() {
-        String input = "";
-        while (!(input.equals("1") || input.equals("2") || input.equals("3"))) {
+    public Integer displayStartView() {
+        Integer input = 0;
+        while (!(input.equals(1) || input.equals(2) || input.equals(3))) {
             clearScreen();
             System.out.print(
                     "\n***************************************\n" +
@@ -38,11 +38,11 @@ public class ConsoleView implements WindowManager {
                             "*                                     *\n" +
                             "***************************************\n");
             System.out.print("Choice: ");
-            if (stdin.hasNext())
-                input = stdin.next();
+            if (stdin.hasNextInt())
+                input = stdin.nextInt();
             else
                 System.exit(0);
-            if (!(input.equals("1") || input.equals("2") || input.equals("3"))) {
+            if (!(input.equals(1) || input.equals(2) || input.equals(3))) {
                 System.out.println("\nInvalid symbol. Enter either 1, 2, or 3.");
                 try {
                     Thread.sleep(1000);
@@ -51,11 +51,11 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        //TODO: execute input
+        return input;
     }
 
     @Override
-    public void displayPlayerSelectionView(ArrayList<Person> heroes) {
+    public String displayPlayerSelectionView(List<Person> heroes) {
         String input = "";
         while (!(input.matches("\\d+$") || input.equals("q") || input.equals("b"))) {
             clearScreen();
@@ -94,7 +94,9 @@ public class ConsoleView implements WindowManager {
                 input = stdin.next();
             else
                 System.exit(0);
-            if (!(input.matches("\\d+$") || input.equals("q") || input.equals("b"))) {
+            if (input.equals("q") || input.equals("b")) {
+                return input;
+            } else if (!(input.matches("\\d+$") && Integer.parseInt(input) >= 1 || Integer.parseInt(input) <= index)) {
                 System.out.println("Invalid symbol. Enter a number of a hero");
                 try {
                     Thread.sleep(1000);
@@ -103,17 +105,16 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        //TODO: execute input
+
+        return heroes.get(Integer.parseInt(input) - 1).getId().toString();
     }
 
     @Override
-    public void displayCreatePlayerView() {
+    public void displayCreatePlayerView() throws IllegalInputException {
         String heroClass = getHeroClass();
         String heroName = getHeroName();
         boolean isHeroDefault = isHeroDefault();
-        try {
             if (isHeroDefault) {
-
                 characterController.createDefaultPerson(heroName, heroClass);
 
             } else {
@@ -125,12 +126,11 @@ public class ConsoleView implements WindowManager {
                 hp = getStat("HP");
                 characterController.createPerson(heroName, heroClass, level, attack, defense, hp);
             }
-        } catch (IllegalInputException e) {
-            log.error("Error with creating hero\n" + e.getMessage());
-        }
+
     }
 
     private String getHeroClass() {
+        String[] heroesClasses = {"Elf", "Knight", "Magician", "Orc"};
         String input = "";
         while (!(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4"))) {
             clearScreen();
@@ -152,7 +152,7 @@ public class ConsoleView implements WindowManager {
             else
                 System.exit(0);
             if (!(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4"))) {
-                System.out.println("Invalid choice. Enter either 1, 2 or 3.");
+                System.out.println("Invalid choice. Enter either 1, 2, 3 or 4.");
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -160,7 +160,7 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        return input;
+        return heroesClasses[Integer.parseInt(input)];
     }
 
     private String getHeroName() {
@@ -243,7 +243,7 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public void displayErrors(ArrayList<String> errors) {
+    public void displayErrors(List<String> errors) {
 
     }
 
@@ -258,8 +258,17 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public void displayMap(Map map) {
-
+    public void displayMap(Map map, Person person) {
+        for(int i = 0; i < map.getSize(); i++) {
+            for(int j = 0; i < map.getSize(); j++) {
+                if (i == person.getCoordinates().getY() && j == person.getCoordinates().getX()) {
+                    System.out.print("&");
+                } else {
+                    System.out.print("-");
+                }
+            }
+            System.out.println();
+        }
     }
 
     @Override
