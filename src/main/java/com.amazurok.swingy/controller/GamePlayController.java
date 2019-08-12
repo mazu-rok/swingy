@@ -13,7 +13,7 @@ import java.util.List;
 public class GamePlayController {
     Logger log = LoggerFactory.getLogger(GamePlayController.class);
 
-    private enum GameStage {START, SELECTION, CREATION, ERRORS, PLAY, FIGHT, RUN, GAME_OVER, QUIT}
+    private enum GameStage {START, SELECTION, CREATION, ERRORS, PLAY, FIGHT, RUN, WIN, GAME_OVER, QUIT}
 
     private DBController db = new DBController();
     private CharacterController characterController = new CharacterController(db);
@@ -33,6 +33,7 @@ public class GamePlayController {
     }
 
     public void game() {
+        String res;
         while (true) {
             switch (stage) {
                 case START:
@@ -47,31 +48,61 @@ public class GamePlayController {
                     break;
                 case SELECTION:
                     List<Person> heroes = db.getHeroes();
-                    String res = windowManager.displayPlayerSelectionView(heroes);
+                    res = windowManager.displayPlayerSelectionView(heroes);
                     if (res.equals("q")) {
                         stage = GameStage.QUIT;
                     } else if (res.equals("b")) {
                         stage = GameStage.START;
                     } else {
-                        characterController.getPerson(db.getHeroById(res));
-                        stage = GameStage.PLAY;
+                        try {
+                            characterController.setPerson(db.getHeroById(res));
+                            characterController.createEnemy();
+                            stage = GameStage.PLAY;
+                        } catch (IllegalInputException e) {
+                            log.error("Error with creating enemies\n" + e.getMessage());
+                        }
                     }
                     break;
                 case CREATION:
                     try {
                         windowManager.displayCreatePlayerView();
+                        characterController.createEnemy();
                         stage = GameStage.PLAY;
                     } catch (IllegalInputException e) {
                         log.error("Error with creating hero\n" + e.getMessage());
                     }
                     break;
                 case PLAY:
+                    res = windowManager.displayPlayView();
+                    if (characterController.move(res)) {
+                        stage = GameStage.WIN;
+                    }
+                    if (characterController.isItTimeToFight()) {
+                        if (windowManager.displayFightOrRun().equals("f")) {
+                            stage = GameStage.FIGHT;
+                        } else {
+                            stage = GameStage.RUN;
+                        }
+                    }
                     break;
                 case FIGHT:
                     break;
                 case RUN:
                     break;
                 case ERRORS:
+                    break;
+                case WIN:
+                    if (windowManager.displayWinView()) {
+                        stage = GameStage.PLAY;
+                        try {
+                            characterController.setPersonToCentre();
+                            characterController.createEnemy();
+                        } catch (IllegalInputException e) {
+                            log.error("Error with creating enemies\n" + e.getMessage());
+                        }
+                    } else {
+                        stage = GameStage.QUIT;
+                    }
                     break;
                 case GAME_OVER:
                     break;

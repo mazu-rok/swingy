@@ -5,13 +5,14 @@ import com.amazurok.swingy.model.artifacts.Helm;
 import com.amazurok.swingy.model.artifacts.Weapon;
 import com.amazurok.swingy.model.map.Coordinates;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.UUID;
 
 @Getter
+@NoArgsConstructor
 public class Orc extends Person {
-
     private static int DEFAULT_ATTACK = 40;
     private static int DEFAULT_DEFENSE = 50;
     private static int DEFAULT_HP = 900;
@@ -46,6 +47,6 @@ public class Orc extends Person {
 
     public void setHelm(Helm helm) {
         this.helm = helm;
-        this.hp = DEFAULT_HP + (DEFAULT_HP * (weapon.getPower() / 100));
+        this.hp = DEFAULT_HP + (DEFAULT_HP * (helm.getPower() / 100));
     }
 }

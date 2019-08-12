@@ -2,10 +2,11 @@ package com.amazurok.swingy.model.characters;
 
 import com.amazurok.swingy.anotation.ValidateType;
 import com.amazurok.swingy.model.map.Coordinates;
-import dev.morphia.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.mongodb.morphia.annotations.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity("heroes")
 @Indexes(@Index(fields = { @Field("name") }, options = @IndexOptions(unique = true)))
 public class Person {

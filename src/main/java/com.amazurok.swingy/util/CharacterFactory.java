@@ -22,7 +22,7 @@ public class CharacterFactory {
             case "Orc":
                 return new Orc(name, level, attack, defense, hp, coordinates);
             case "Enemy":
-                return new Enemy(name, level, attack, defense, hp, coordinates);
+                return new Enemy(name, level, coordinates);
             default:
                 throw new IllegalInputException(String.format("Type '%s' is not supported", type));
         }

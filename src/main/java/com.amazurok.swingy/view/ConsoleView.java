@@ -116,7 +116,6 @@ public class ConsoleView implements WindowManager {
         boolean isHeroDefault = isHeroDefault();
             if (isHeroDefault) {
                 characterController.createDefaultPerson(heroName, heroClass);
-
             } else {
                 int level, attack, defense, hp;
 
@@ -216,7 +215,7 @@ public class ConsoleView implements WindowManager {
             System.out.println(String.format(
                     "\n*****************************\n" +
                             "*                           *\n" +
-                            "*        Enter %-10s*\n" +
+                            "*        Enter %-13s*\n" +
                             "*                           *\n" +
                             "*****************************\n", stat)
             );
@@ -225,7 +224,7 @@ public class ConsoleView implements WindowManager {
                 value = stdin.next();
             else
                 System.exit(0);
-            if (!value.matches("-?\\d+$")) {
+            if (!value.matches("-?\\d+$") || Integer.parseInt(value) < 0) {
                 System.out.println("\nInvalid " + stat + ". Please enter a number.");
                 try {
                     Thread.sleep(1000);
@@ -260,9 +259,9 @@ public class ConsoleView implements WindowManager {
     @Override
     public void displayMap(Map map, Person person) {
         for(int i = 0; i < map.getSize(); i++) {
-            for(int j = 0; i < map.getSize(); j++) {
+            for(int j = 0; j < map.getSize(); j++) {
                 if (i == person.getCoordinates().getY() && j == person.getCoordinates().getX()) {
-                    System.out.print("&");
+                    System.out.print(person.getName().charAt(0));
                 } else {
                     System.out.print("-");
                 }
@@ -272,7 +271,33 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public void displayFightOrRunPrompt() {
+    public String displayFightOrRun() {
+        String input = "";
+        while (!(input.toLowerCase().equals("f") || input.toLowerCase().equals("r"))) {
+            clearScreen();
+            displayMap(characterController.getMap(), characterController.getPerson());
+            System.out.print(
+                    "\n****************************************\n" +
+                            "*                                      *\n" +
+                            "*    Make your choice, fight or run?   *\n" +
+                            "*                                      *\n" +
+                            "****************************************\n" +
+                            "F/R: "
+            );
+            if (stdin.hasNext())
+                input = stdin.next();
+            else
+                System.exit(0);
+            if (!(input.toLowerCase().equals("f") || input.toLowerCase().equals("r"))) {
+                System.out.println("\nInvalid instruction. Please try again.");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        return input.toLowerCase();
 
     }
 
@@ -282,12 +307,55 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public void displayPlayView() {
-
+    public String displayPlayView() {
+        clearScreen();
+        displayMap(characterController.getMap(), characterController.getPerson());
+        String input = "";
+        while (!(input.toLowerCase().equals("n") || input.toLowerCase().equals("e") || input.toLowerCase().equals("s")
+                || input.toLowerCase().equals("w"))) {
+            System.out.print(
+                    "\n********************************************************\n" +
+                            "*                                                      *\n" +
+                            "*  Where do you want to go, North, East, South, West?  *\n" +
+                            "*                                                      *\n" +
+                            "********************************************************\n" +
+                            "N/E/S/W: "
+            );
+            if (stdin.hasNext())
+                input = stdin.next();
+            else
+                System.exit(0);
+            if (!(input.toLowerCase().equals("n") || input.toLowerCase().equals("e") || input.toLowerCase().equals("s")
+                    || input.toLowerCase().equals("w"))) {
+                System.out.println("\nInvalid instruction. Please try again.");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        return input.toLowerCase();
     }
 
     @Override
-    public void displayRenderGame() {
+    public boolean displayWinView() {
+        String input = "";
+        clearScreen();
+        System.out.print(
+                "\n********************************\n" +
+                        "*                              *\n" +
+                        "*       Your are win!!!        *\n" +
+                        "*   Do you want to continue?   *\n" +
+                        "*                              *\n" +
+                        "********************************\n" +
+                        "Y/N: "
+        );
+        if (stdin.hasNext())
+            input = stdin.next();
+        else
+            System.exit(0);
+        return input.toLowerCase().equals("y");
 
     }
 

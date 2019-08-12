@@ -16,8 +16,8 @@ public interface WindowManager {
     void displayGameOver(boolean heroWon);
     void displayQuitDialogue();
     void displayMap(final Map map, Person person);
-    void displayFightOrRunPrompt();
+    String displayFightOrRun();
     void displayForcedFightNotice();
-    void displayPlayView();
-    void displayRenderGame();
+    String displayPlayView();
+    boolean displayWinView();
 }

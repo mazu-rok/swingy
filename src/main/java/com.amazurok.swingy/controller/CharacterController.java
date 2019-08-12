@@ -6,8 +6,10 @@ import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.model.map.Coordinates;
 import com.amazurok.swingy.model.map.Map;
 import com.amazurok.swingy.util.CharacterFactory;
+import lombok.Getter;
 
-import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class CharacterController {
@@ -15,10 +17,12 @@ public class CharacterController {
     private DBController db;
 
     private int defaultMapSize = 9;
+    @Getter
     private Map map;
+    @Getter
     private Person person;
-    private Person enemy;
-    private int enemyLevel;
+    @Getter
+    private List<Person> enemies;
 
     public CharacterController(DBController db) {
         this.db = db;
@@ -36,20 +40,25 @@ public class CharacterController {
         db.save(this.person);
     }
 
-    public void getPerson(Person person) {
+    public void setPerson(Person person) {
         this.map = new Map(person.getLevel());
         this.person = person;
     }
 
-    public void createEnemy(Coordinates coordinates) throws IllegalInputException {
+    public void createEnemy() throws IllegalInputException {
         Random rand = new Random();
+        enemies = new ArrayList<>();
 
         String[] names = {"Thanos", "Mysterio", "Hela"};
-        int name = rand.nextInt(3);
-        this.enemy = CharacterFactory.createPerson(names[name], "Enemy", coordinates);
+        for (int i = 0; i < person.getLevel(); i++) {
+            int name = rand.nextInt(3);
+            int x = rand.nextInt(map.getSize());
+            int y = rand.nextInt(map.getSize());
+            this.enemies.add(CharacterFactory.createPerson(names[name],"Enemy", person.getLevel(), 0, 0, 0,  new Coordinates(x, y)));
+        }
     }
 
-    public void move(String direction) {
+    public boolean move(String direction) {
         Coordinates coordinates = person.getCoordinates();
 
         switch (direction.toLowerCase()) {
@@ -63,9 +72,29 @@ public class CharacterController {
                 coordinates.setX(coordinates.getX() - 1);
                 break;
             case "s":
-                coordinates.setY(coordinates.getX() + 1);
+                coordinates.setY(coordinates.getY() + 1);
                 break;
         }
         person.setCoordinates(coordinates);
+        return isEnd();
+    }
+
+    private boolean isEnd() {
+        Coordinates coordinates = person.getCoordinates();
+         return coordinates.getX() < 0 || coordinates.getY() < 0 || coordinates.getX() > map.getSize() || coordinates.getY() > map.getSize();
+    }
+
+    public boolean isItTimeToFight() {
+        for (Person enemy: enemies) {
+            if (enemy.getCoordinates().equals(person.getCoordinates())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setPersonToCentre() {
+        this.map = new Map(person.getLevel());
+        person.setCoordinates(new Coordinates(map.getSize()/2, map.getSize()/2));
     }
 }

@@ -1,9 +1,10 @@
 package com.amazurok.swingy.controller;
 
 import com.amazurok.swingy.model.characters.Person;
+import com.amazurok.swingy.storage.HeroStorage;
 import com.mongodb.*;
-import dev.morphia.Datastore;
-import dev.morphia.Morphia;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,14 +14,7 @@ import java.util.UUID;
 public class DBController {
     private Logger log = LoggerFactory.getLogger(DBController.class);
 
-    private final Datastore db;
-
-    public DBController() {
-        Morphia morphia = new Morphia();
-        db = morphia.createDatastore(new MongoClient(), "swingy");
-        db.ensureIndexes(Person.class);
-
-    }
+    private Datastore db = HeroStorage.getHeroStorage("swingy");
 
     public boolean save(Person person) {
         try {
@@ -33,11 +27,11 @@ public class DBController {
     }
 
     public List<Person> getHeroes() {
-        return db.find(Person.class).find().toList();
+        return db.find(Person.class).asList();
     }
 
     public Person getHeroById(String id) {
-        return db.find(Person.class).field("id").equal(UUID.fromString(id)).first();
+        return db.find(Person.class).field("id").equal(UUID.fromString(id)).get();
     }
 
 }
