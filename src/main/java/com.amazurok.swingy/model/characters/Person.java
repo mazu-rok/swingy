@@ -1,15 +1,14 @@
 package com.amazurok.swingy.model.characters;
 
 import com.amazurok.swingy.anotation.ValidateType;
+import com.amazurok.swingy.model.artifacts.Armor;
+import com.amazurok.swingy.model.artifacts.Helm;
+import com.amazurok.swingy.model.artifacts.Weapon;
 import com.amazurok.swingy.model.map.Coordinates;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.mongodb.morphia.annotations.*;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Getter
@@ -19,50 +18,62 @@ import java.util.UUID;
 @Indexes(@Index(fields = { @Field("name") }, options = @IndexOptions(unique = true)))
 public class Person {
 
-    @NotNull
+    @NonNull
     @Id
     UUID id;
 
-    @NotNull
+    @NonNull
     @Setter
     protected String name;
 
-    @NotNull
+    @NonNull
     @Setter
     @ValidateType(types = {"Elf", "Knight", "Magician", "Orc"})
     protected String type;
 
+    @NonNull
     @Setter
     @Min(value = 1, message = "Level cannot be lower than 1.")
-    protected int level;
+    protected Integer level;
 
+    @NonNull
     @Min(value = 0, message = "Experience cannot be lower than 0.")
-    protected int experience;
+    protected Integer experience;
 
+    @NonNull
     @Setter
     @Min(value = 0, message = "Attack cannot be lower than 0.")
-    protected int attack;
+    protected Integer attack;
 
+    @NonNull
     @Setter
     @Min(value = 0, message = "Defense cannot be lower than 0.")
-    protected int defense;
+    protected Integer defense;
 
+    @NonNull
     @Setter
     @Min(value = 0, message = "Hit point cannot be lower than 0.")
-    protected int hp;
+    protected Integer hp;
 
     @Setter
-    @NotNull
+    @NonNull
     protected Coordinates coordinates;
 
     public void setExperience(int experience) {
         for (int i = level;; i++) {
-            if (experience < (level*1000 + Math.pow(level - 1, 2) * 450)) {
+            if (experience < (i*1000 + Math.pow(i - 1, 2) * 450)) {
                 level = i - 1;
                 break;
             }
         }
         this.experience = experience;
+    }
+
+    public void punch(Person person) {
+        Integer attack = this.attack;
+        attack = (int)(attack - (attack * (double)person.getDefense() / 100));
+        person.setHp(person.getHp() - attack);
+        person.setDefense(person.getDefense() - (int)(person.getDefense() * (double)attack / 200));
     }
 
     public void incrementExperience(int experience) {

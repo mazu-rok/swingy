@@ -17,13 +17,10 @@ public class Orc extends Person {
     private static int DEFAULT_DEFENSE = 50;
     private static int DEFAULT_HP = 900;
 
-    @NonNull
     private Weapon weapon;
 
-    @NonNull
     private Armor armor;
 
-    @NonNull
     private Helm helm;
 
     public Orc(String name, int level, int attack, int defense, int hp, Coordinates coordinates) {
@@ -37,16 +34,27 @@ public class Orc extends Person {
 
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
-        this.attack = DEFAULT_ATTACK + (DEFAULT_ATTACK * (weapon.getPower() / 100));
+        this.attack = (int)(DEFAULT_ATTACK + ((double)DEFAULT_ATTACK * (weapon.getPower() / 100)));
     }
 
     public void setArmor(Armor armor) {
         this.armor = armor;
-        this.defense = DEFAULT_DEFENSE + (DEFAULT_DEFENSE * (armor.getPower() / 100));
+        this.defense = (int)(DEFAULT_DEFENSE + ((double)DEFAULT_DEFENSE * (armor.getPower() / 100)));
     }
 
     public void setHelm(Helm helm) {
         this.helm = helm;
-        this.hp = DEFAULT_HP + (DEFAULT_HP * (helm.getPower() / 100));
+        this.hp = (int)(DEFAULT_HP + ((double)DEFAULT_HP * (helm.getPower() / 100)));
     }
+
+    public void setArtifact(Object artifact) {
+        if (artifact instanceof Armor) {
+            setArmor((Armor) artifact);
+        } else if (artifact instanceof Helm) {
+            setHelm((Helm) artifact);
+        } else {
+            setWeapon((Weapon) artifact);
+        }
+    }
+
 }

@@ -1,10 +1,17 @@
 package com.amazurok.swingy.controller;
 
 import com.amazurok.swingy.exceptions.IllegalInputException;
-import com.amazurok.swingy.model.characters.Enemy;
+import com.amazurok.swingy.model.artifacts.Armor;
+import com.amazurok.swingy.model.artifacts.Artifact;
+import com.amazurok.swingy.model.artifacts.Helm;
+import com.amazurok.swingy.model.characters.Elf;
+import com.amazurok.swingy.model.characters.Knight;
+import com.amazurok.swingy.model.characters.Magician;
+import com.amazurok.swingy.model.characters.Orc;
 import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.model.map.Coordinates;
 import com.amazurok.swingy.model.map.Map;
+import com.amazurok.swingy.util.ArtifactFactory;
 import com.amazurok.swingy.util.CharacterFactory;
 import lombok.Getter;
 
@@ -16,7 +23,9 @@ public class CharacterController {
 
     private DBController db;
 
-    private int defaultMapSize = 9;
+    private Person currentEnemy = null;
+    Random rand = new Random();
+
     @Getter
     private Map map;
     @Getter
@@ -46,7 +55,6 @@ public class CharacterController {
     }
 
     public void createEnemy() throws IllegalInputException {
-        Random rand = new Random();
         enemies = new ArrayList<>();
 
         String[] names = {"Thanos", "Mysterio", "Hela"};
@@ -87,14 +95,53 @@ public class CharacterController {
     public boolean isItTimeToFight() {
         for (Person enemy: enemies) {
             if (enemy.getCoordinates().equals(person.getCoordinates())) {
+                currentEnemy = enemy;
                 return true;
             }
         }
+        currentEnemy = null;
         return false;
     }
 
     public void setPersonToCentre() {
         this.map = new Map(person.getLevel());
         person.setCoordinates(new Coordinates(map.getSize()/2, map.getSize()/2));
+    }
+
+    public Person fight() {
+        while (person.getHp() > 0 && currentEnemy.getHp() > 0) {
+            person.punch(currentEnemy);
+            if (currentEnemy.getHp() > 0) {
+                currentEnemy.punch(person);
+            }
+        }
+        if (person.getHp() > 0) {
+            person.incrementExperience(person.getLevel() * 100);
+            enemies.remove(currentEnemy);
+            return person;
+        }
+        return currentEnemy;
+    }
+
+    public Artifact getArtifact() {
+        int power = rand.nextInt(100);
+        String[] artifacts = {"Armor", "Helm", "Weapon"};
+        int ind = rand.nextInt(10);
+        if (ind < 3) {
+            return ArtifactFactory.createArtifact(artifacts[ind], power);
+        }
+        return null;
+    }
+
+    public void setArtifact(Artifact artifact) {
+        if (person instanceof Orc) {
+            ((Orc)person).setArtifact(artifact);
+        } else if (person instanceof Magician) {
+            ((Magician)person).setArtifact(artifact);
+        } else if (person instanceof Knight) {
+            ((Knight)person).setArtifact(artifact);
+        } else {
+            ((Elf)person).setArtifact(artifact);
+        }
     }
 }

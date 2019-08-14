@@ -2,6 +2,7 @@ package com.amazurok.swingy.view;
 
 import com.amazurok.swingy.controller.CharacterController;
 import com.amazurok.swingy.exceptions.IllegalInputException;
+import com.amazurok.swingy.model.artifacts.Artifact;
 import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.model.map.Map;
 import org.slf4j.Logger;
@@ -114,17 +115,17 @@ public class ConsoleView implements WindowManager {
         String heroClass = getHeroClass();
         String heroName = getHeroName();
         boolean isHeroDefault = isHeroDefault();
-            if (isHeroDefault) {
-                characterController.createDefaultPerson(heroName, heroClass);
-            } else {
-                int level, attack, defense, hp;
+        if (isHeroDefault) {
+            characterController.createDefaultPerson(heroName, heroClass);
+        } else {
+            int level, attack, defense, hp;
 
-                level = getStat("Level");
-                attack = getStat("Attack");
-                defense = getStat("Defense");
-                hp = getStat("HP");
-                characterController.createPerson(heroName, heroClass, level, attack, defense, hp);
-            }
+            level = getStat("Level");
+            attack = getStat("Attack");
+            defense = getStat("Defense");
+            hp = getStat("HP");
+            characterController.createPerson(heroName, heroClass, level, attack, defense, hp);
+        }
 
     }
 
@@ -237,8 +238,32 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public void displayBattleReport(String report) {
-
+    public void displayFightReport(Person player) {
+        try {
+            clearScreen();
+            System.out.println(
+                    "\n*************************\n" +
+                            "*                       *\n" +
+                            "*     Winner is....     *\n" +
+                            "*                       *\n" +
+                            "*************************");
+            Thread.sleep(500);
+            String line = String.format(
+                    "Name: %s\n" +
+                            "\tClass: %s\n" +
+                            "\tLevel: %d\n" +
+                            "\tExperience: %d\n" +
+                            "\tAttack: %d\n" +
+                            "\tDefense: %d\n" +
+                            "\tHP: %d\n",
+                    player.getName(), player.getType(), player.getLevel(), player.getExperience(), player.getAttack(),
+                    player.getDefense(), player.getHp()
+            );
+            System.out.println(line);
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
@@ -258,8 +283,8 @@ public class ConsoleView implements WindowManager {
 
     @Override
     public void displayMap(Map map, Person person) {
-        for(int i = 0; i < map.getSize(); i++) {
-            for(int j = 0; j < map.getSize(); j++) {
+        for (int i = 0; i < map.getSize(); i++) {
+            for (int j = 0; j < map.getSize(); j++) {
                 if (i == person.getCoordinates().getY() && j == person.getCoordinates().getX()) {
                     System.out.print(person.getName().charAt(0));
                 } else {
@@ -304,6 +329,36 @@ public class ConsoleView implements WindowManager {
     @Override
     public void displayForcedFightNotice() {
 
+    }
+
+    @Override
+    public String displayArtifact(Artifact artifact) {
+        String input = "";
+        while (!(input.toLowerCase().equals("y") || input.toLowerCase().equals("n"))) {
+            clearScreen();
+            System.out.println(String.format(
+                    "\n****************************************\n" +
+                            "*                                      *\n" +
+                            "*     You found %6s with power %3d  *\n" +
+                            "*         Do you want to get it?       *" +
+                            "*                                      *\n" +
+                            "****************************************" +
+                            "Y/N: ", artifact.getType(), artifact.getPower()));
+
+            if (stdin.hasNext())
+                input = stdin.next();
+            else
+                System.exit(0);
+            if (!(input.toLowerCase().equals("y") || input.toLowerCase().equals("n"))) {
+                System.out.println("\nInvalid answer. Please try again.");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        return input.toLowerCase();
     }
 
     @Override

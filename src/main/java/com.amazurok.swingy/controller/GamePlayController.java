@@ -2,6 +2,7 @@ package com.amazurok.swingy.controller;
 
 import com.amazurok.swingy.exceptions.IllegalInputException;
 import com.amazurok.swingy.model.Game;
+import com.amazurok.swingy.model.artifacts.Artifact;
 import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.view.ConsoleView;
 import com.amazurok.swingy.view.WindowManager;
@@ -86,6 +87,19 @@ public class GamePlayController {
                     }
                     break;
                 case FIGHT:
+                    Person person = characterController.fight();
+                    windowManager.displayFightReport(person);
+                    if (person.getName().equals("Enemy")) {
+                        stage = GameStage.GAME_OVER;
+                    } else {
+                        Artifact artifact = characterController.getArtifact();
+                        if (artifact != null) {
+                            if (windowManager.displayArtifact(artifact).equals("y")) {
+                                characterController.setArtifact(artifact);
+                            }
+                        }
+                        stage = GameStage.PLAY;
+                    }
                     break;
                 case RUN:
                     break;
@@ -95,6 +109,7 @@ public class GamePlayController {
                     if (windowManager.displayWinView()) {
                         stage = GameStage.PLAY;
                         try {
+                            characterController.getPerson().incrementExperience(1000);
                             characterController.setPersonToCentre();
                             characterController.createEnemy();
                         } catch (IllegalInputException e) {
@@ -108,6 +123,14 @@ public class GamePlayController {
                     break;
                 case QUIT:
                     System.exit(0);
+                    break;
+                default:
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        log.error("Cannot use sleep " + e.getMessage());
+                    }
+
             }
         }
     }
