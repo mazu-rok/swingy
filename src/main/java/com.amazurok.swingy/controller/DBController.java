@@ -16,14 +16,8 @@ public class DBController {
 
     private Datastore db = HeroStorage.getHeroStorage("swingy");
 
-    public boolean save(Person person) {
-        try {
-            db.save(person);
-            return true;
-        } catch (DuplicateKeyException e) {
-            log.error(e.getMessage());
-            return false;
-        }
+    public void save(Person person) throws DuplicateKeyException {
+        db.save(person);
     }
 
     public List<Person> getHeroes() {

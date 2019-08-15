@@ -11,10 +11,10 @@ import java.util.List;
 public interface WindowManager {
     Integer displayStartView();
     String displayPlayerSelectionView(List<Person> heroes);
-    void displayCreatePlayerView() throws IllegalInputException;
+    void displayCreatePlayerView();
     void displayFightReport(Person person);
-    void displayErrors(List<String> errors);
-    void displayGameOver(boolean heroWon);
+    void displayError(String error);
+    boolean displayGameOver();
     void displayQuitDialogue();
     void displayMap(final Map map, Person person);
     String displayFightOrRun();

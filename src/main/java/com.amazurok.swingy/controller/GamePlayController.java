@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Random;
 
 public class GamePlayController {
     Logger log = LoggerFactory.getLogger(GamePlayController.class);
@@ -55,23 +56,15 @@ public class GamePlayController {
                     } else if (res.equals("b")) {
                         stage = GameStage.START;
                     } else {
-                        try {
-                            characterController.setPerson(db.getHeroById(res));
-                            characterController.createEnemy();
-                            stage = GameStage.PLAY;
-                        } catch (IllegalInputException e) {
-                            log.error("Error with creating enemies\n" + e.getMessage());
-                        }
+                        characterController.setPerson(db.getHeroById(res));
+                        characterController.createEnemy();
+                        stage = GameStage.PLAY;
                     }
                     break;
                 case CREATION:
-                    try {
-                        windowManager.displayCreatePlayerView();
-                        characterController.createEnemy();
-                        stage = GameStage.PLAY;
-                    } catch (IllegalInputException e) {
-                        log.error("Error with creating hero\n" + e.getMessage());
-                    }
+                    windowManager.displayCreatePlayerView();
+                    characterController.createEnemy();
+                    stage = GameStage.PLAY;
                     break;
                 case PLAY:
                     res = windowManager.displayPlayView();
@@ -89,7 +82,7 @@ public class GamePlayController {
                 case FIGHT:
                     Person person = characterController.fight();
                     windowManager.displayFightReport(person);
-                    if (person.getName().equals("Enemy")) {
+                    if (person.getType().equals("Enemy")) {
                         stage = GameStage.GAME_OVER;
                     } else {
                         Artifact artifact = characterController.getArtifact();
@@ -98,39 +91,42 @@ public class GamePlayController {
                                 characterController.setArtifact(artifact);
                             }
                         }
+                        characterController.createMap();
                         stage = GameStage.PLAY;
                     }
                     break;
                 case RUN:
+                    if (characterController.run()) {
+
+                        stage = GameStage.PLAY;
+                    } else {
+                        windowManager.displayForcedFightNotice();
+                        stage = GameStage.FIGHT;
+                    }
                     break;
                 case ERRORS:
                     break;
                 case WIN:
                     if (windowManager.displayWinView()) {
                         stage = GameStage.PLAY;
-                        try {
-                            characterController.getPerson().incrementExperience(1000);
-                            characterController.setPersonToCentre();
-                            characterController.createEnemy();
-                        } catch (IllegalInputException e) {
-                            log.error("Error with creating enemies\n" + e.getMessage());
-                        }
+                        characterController.getPerson().incrementExperience(2000);
+                        characterController.setPersonToCentre();
+                        characterController.createEnemy();
                     } else {
                         stage = GameStage.QUIT;
                     }
                     break;
                 case GAME_OVER:
+                    if (windowManager.displayGameOver()) {
+                        stage = GameStage.START;
+                    } else {
+                        stage = GameStage.QUIT;
+                    }
                     break;
                 case QUIT:
+                    windowManager.displayQuitDialogue();
                     System.exit(0);
                     break;
-                default:
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        log.error("Cannot use sleep " + e.getMessage());
-                    }
-
             }
         }
     }

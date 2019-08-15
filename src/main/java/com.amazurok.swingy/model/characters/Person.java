@@ -12,7 +12,7 @@ import javax.validation.constraints.Min;
 import java.util.UUID;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Entity("heroes")
 @Indexes(@Index(fields = { @Field("name") }, options = @IndexOptions(unique = true)))
@@ -59,6 +59,16 @@ public class Person {
     @NonNull
     protected Coordinates coordinates;
 
+    protected Weapon weapon;
+
+    protected Armor armor;
+
+    protected Helm helm;
+
+    protected int DEFAULT_ATTACK;
+    protected int DEFAULT_DEFENSE;
+    protected int DEFAULT_HP;
+
     public void setExperience(int experience) {
         for (int i = level;; i++) {
             if (experience < (i*1000 + Math.pow(i - 1, 2) * 450)) {
@@ -69,14 +79,39 @@ public class Person {
         this.experience = experience;
     }
 
+    public void incrementExperience(int experience) {
+        setExperience(this.experience + experience);
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+        this.attack = (int)(DEFAULT_ATTACK + ((double)DEFAULT_ATTACK * (weapon.getPower() / 100)));
+    }
+
+    public void setArmor(Armor armor) {
+        this.armor = armor;
+        this.defense = (int)(DEFAULT_DEFENSE + ((double)DEFAULT_DEFENSE * (armor.getPower() / 100)));
+    }
+
+    public void setHelm(Helm helm) {
+        this.helm = helm;
+        this.hp = (int)(DEFAULT_HP + ((double)DEFAULT_HP * (helm.getPower() / 100)));
+    }
+
+    public void setArtifact(Object artifact) {
+        if (artifact instanceof Armor) {
+            setArmor((Armor) artifact);
+        } else if (artifact instanceof Helm) {
+            setHelm((Helm) artifact);
+        } else {
+            setWeapon((Weapon) artifact);
+        }
+    }
+
     public void punch(Person person) {
         Integer attack = this.attack;
         attack = (int)(attack - (attack * (double)person.getDefense() / 100));
         person.setHp(person.getHp() - attack);
         person.setDefense(person.getDefense() - (int)(person.getDefense() * (double)attack / 200));
-    }
-
-    public void incrementExperience(int experience) {
-        setExperience(this.experience + experience);
     }
 }

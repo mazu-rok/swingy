@@ -14,47 +14,19 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 public class Knight extends Person {
-    private static int DEFAULT_ATTACK = 60;
-    private static int DEFAULT_DEFENSE = 60;
-    private static int DEFAULT_HP = 500;
-
-    private Weapon weapon;
-
-    private Armor armor;
-
-    private Helm helm;
 
     public Knight(String name, int level, int attack, int defense, int hp, Coordinates coordinates) {
         super(UUID.randomUUID(), name, Knight.class.getSimpleName(), level, (int)(level*1000 + Math.pow(level - 1, 2) * 450), attack, defense, hp, coordinates);
+        DEFAULT_ATTACK = attack;
+        DEFAULT_DEFENSE = defense;
+        DEFAULT_HP = hp;
     }
 
     public Knight(String name, Coordinates coordinates)
     {
-        super(UUID.randomUUID(), name, Knight.class.getSimpleName(), 1, 0, DEFAULT_ATTACK, DEFAULT_DEFENSE, DEFAULT_HP, coordinates);
-    }
-
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
-        this.attack = (int)(DEFAULT_ATTACK + ((double)DEFAULT_ATTACK * (weapon.getPower() / 100)));
-    }
-
-    public void setArmor(Armor armor) {
-        this.armor = armor;
-        this.defense = (int)(DEFAULT_DEFENSE + ((double)DEFAULT_DEFENSE * (armor.getPower() / 100)));
-    }
-
-    public void setHelm(Helm helm) {
-        this.helm = helm;
-        this.hp = (int)(DEFAULT_HP + ((double)DEFAULT_HP * (helm.getPower() / 100)));
-    }
-
-    public void setArtifact(Object artifact) {
-        if (artifact instanceof Armor) {
-            setArmor((Armor) artifact);
-        } else if (artifact instanceof Helm) {
-            setHelm((Helm) artifact);
-        } else {
-            setWeapon((Weapon) artifact);
-        }
+        super(UUID.randomUUID(), name, Knight.class.getSimpleName(), 1, 0, 60, 60, 500, coordinates);
+        DEFAULT_ATTACK = 60;
+        DEFAULT_DEFENSE = 60;
+        DEFAULT_HP = 500;
     }
 }

@@ -111,20 +111,24 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public void displayCreatePlayerView() throws IllegalInputException {
-        String heroClass = getHeroClass();
+    public void displayCreatePlayerView() {
         String heroName = getHeroName();
-        boolean isHeroDefault = isHeroDefault();
-        if (isHeroDefault) {
-            characterController.createDefaultPerson(heroName, heroClass);
-        } else {
-            int level, attack, defense, hp;
+        String heroClass = getHeroClass();
+        try {
+            if (isHeroDefault()) {
+                characterController.createDefaultPerson(heroName, heroClass);
+            } else {
+                int level, attack, defense, hp;
 
-            level = getStat("Level");
-            attack = getStat("Attack");
-            defense = getStat("Defense");
-            hp = getStat("HP");
-            characterController.createPerson(heroName, heroClass, level, attack, defense, hp);
+                level = getStat("Level");
+                attack = getStat("Attack");
+                defense = getStat("Defense");
+                hp = getStat("HP");
+                characterController.createPerson(heroName, heroClass, level, attack, defense, hp);
+            }
+        } catch (Exception e) {
+            displayError("Cannot create hero, please try again\n" + e.getMessage());
+            displayCreatePlayerView();
         }
 
     }
@@ -160,7 +164,7 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        return heroesClasses[Integer.parseInt(input)];
+        return heroesClasses[Integer.parseInt(input) - 1];
     }
 
     private String getHeroName() {
@@ -267,18 +271,53 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public void displayErrors(List<String> errors) {
-
+    public void displayError(String error) {
+        clearScreen();
+        System.out.println(
+                "\n***************************************\n" +
+                        "*                                     *\n" +
+                        "*           Something happen          *\n" +
+                        "* Press any key and Enter to continue *\n" +
+                        "*                                     *\n" +
+                        "***************************************\n" +
+                        error);
+        stdin.hasNext();
     }
 
     @Override
-    public void displayGameOver(boolean heroWon) {
-
+    public boolean displayGameOver() {
+        String input = "";
+        clearScreen();
+        System.out.print(
+                "\n********************************\n" +
+                        "*                              *\n" +
+                        "*          You lost!!!         *\n" +
+                        "*   Do you want to continue?   *\n" +
+                        "*                              *\n" +
+                        "********************************\n" +
+                        "Y/N: "
+        );
+        if (stdin.hasNext())
+            input = stdin.next();
+        else
+            System.exit(0);
+        return input.toLowerCase().equals("y");
     }
 
     @Override
     public void displayQuitDialogue() {
-
+        clearScreen();
+        System.out.print(
+                "\n****************\n" +
+                        "*              *\n" +
+                        "*  Goodbye!!!  *\n" +
+                        "*              *\n" +
+                        "****************\n");
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
@@ -328,7 +367,18 @@ public class ConsoleView implements WindowManager {
 
     @Override
     public void displayForcedFightNotice() {
-
+        clearScreen();
+        System.out.print(
+                "\n****************************************\n" +
+                        "*                                      *\n" +
+                        "*  Unfortunately you could not escape  *\n" +
+                        "*                                      *\n" +
+                        "****************************************\n");
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
@@ -340,9 +390,9 @@ public class ConsoleView implements WindowManager {
                     "\n****************************************\n" +
                             "*                                      *\n" +
                             "*     You found %6s with power %3d  *\n" +
-                            "*         Do you want to get it?       *" +
+                            "*         Do you want to get it?       *\n" +
                             "*                                      *\n" +
-                            "****************************************" +
+                            "****************************************\n" +
                             "Y/N: ", artifact.getType(), artifact.getPower()));
 
             if (stdin.hasNext())
@@ -400,7 +450,7 @@ public class ConsoleView implements WindowManager {
         System.out.print(
                 "\n********************************\n" +
                         "*                              *\n" +
-                        "*       Your are win!!!        *\n" +
+                        "*          You win!!!          *\n" +
                         "*   Do you want to continue?   *\n" +
                         "*                              *\n" +
                         "********************************\n" +
@@ -411,7 +461,6 @@ public class ConsoleView implements WindowManager {
         else
             System.exit(0);
         return input.toLowerCase().equals("y");
-
     }
 
     public void clearScreen() {
