@@ -8,6 +8,7 @@ import com.amazurok.swingy.model.map.Coordinates;
 import lombok.*;
 import org.mongodb.morphia.annotations.*;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.UUID;
 
@@ -34,25 +35,30 @@ public class Person {
     @NonNull
     @Setter
     @Min(value = 1, message = "Level cannot be lower than 1.")
+    @Max(value = Integer.MAX_VALUE, message = "Level is too big")
     protected Integer level;
 
     @NonNull
     @Min(value = 0, message = "Experience cannot be lower than 0.")
+    @Max(value = Integer.MAX_VALUE, message = "Experience is too big")
     protected Integer experience;
 
     @NonNull
     @Setter
     @Min(value = 0, message = "Attack cannot be lower than 0.")
+    @Max(value = Integer.MAX_VALUE, message = "Attack is too big")
     protected Integer attack;
 
     @NonNull
     @Setter
     @Min(value = 0, message = "Defense cannot be lower than 0.")
+    @Max(value = Integer.MAX_VALUE, message = "Defense is too big")
     protected Integer defense;
 
     @NonNull
     @Setter
     @Min(value = 0, message = "Hit point cannot be lower than 0.")
+    @Max(value = Integer.MAX_VALUE, message = "HP is too big")
     protected Integer hp;
 
     @Setter

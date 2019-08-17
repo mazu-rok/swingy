@@ -13,13 +13,13 @@ public class ValidateTypeConstraint implements ConstraintValidator<ValidateType,
     @Override
     public void initialize(ValidateType constraintAnnotation)
     {
-        values = new ArrayList<String>();
+        values = new ArrayList<>();
         Collections.addAll(values, constraintAnnotation.types());
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context)
     {
-        return values.contains(value.toUpperCase());
+        return values.contains(value);
     }
 }

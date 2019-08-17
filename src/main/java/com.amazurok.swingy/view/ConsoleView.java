@@ -1,6 +1,7 @@
 package com.amazurok.swingy.view;
 
 import com.amazurok.swingy.controller.CharacterController;
+import com.amazurok.swingy.controller.GamePlayController;
 import com.amazurok.swingy.exceptions.IllegalInputException;
 import com.amazurok.swingy.model.artifacts.Artifact;
 import com.amazurok.swingy.model.characters.Person;
@@ -16,16 +17,18 @@ public class ConsoleView implements WindowManager {
 
     private Scanner stdin;
     private CharacterController characterController;
+    private GamePlayController gamePlayController;
 
-    public ConsoleView(CharacterController characterController) {
+    public ConsoleView(CharacterController characterController, GamePlayController gamePlayController) {
         this.characterController = characterController;
+        this.gamePlayController = gamePlayController;
         stdin = new Scanner(System.in);
     }
 
     @Override
-    public Integer displayStartView() {
-        Integer input = 0;
-        while (!(input.equals(1) || input.equals(2) || input.equals(3))) {
+    public void displayStartView() {
+        String input = "";
+        while (!(input.equals("1") || input.equals("2") || input.equals("3"))) {
             clearScreen();
             System.out.print(
                     "\n***************************************\n" +
@@ -39,11 +42,11 @@ public class ConsoleView implements WindowManager {
                             "*                                     *\n" +
                             "***************************************\n");
             System.out.print("Choice: ");
-            if (stdin.hasNextInt())
-                input = stdin.nextInt();
+            if (stdin.hasNext())
+                input = stdin.next();
             else
                 System.exit(0);
-            if (!(input.equals(1) || input.equals(2) || input.equals(3))) {
+            if (!(input.equals("1") || input.equals("2") || input.equals("3"))) {
                 System.out.println("\nInvalid symbol. Enter either 1, 2, or 3.");
                 try {
                     Thread.sleep(1000);
@@ -52,13 +55,14 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        return input;
+        gamePlayController.setInput(input);
+        gamePlayController.display();
     }
 
     @Override
-    public String displayPlayerSelectionView(List<Person> heroes) {
+    public void displayPlayerSelectionView(List<Person> heroes) {
         String input = "";
-        while (!(input.matches("\\d+$") || input.equals("q") || input.equals("b"))) {
+        while (!input.matches("\\d+$")) {
             clearScreen();
             System.out.println(
                     "\n*******************************************************\n" +
@@ -96,7 +100,9 @@ public class ConsoleView implements WindowManager {
             else
                 System.exit(0);
             if (input.equals("q") || input.equals("b")) {
-                return input;
+                gamePlayController.setInput(input);
+                gamePlayController.display();
+                return;
             } else if (!(input.matches("\\d+$") && Integer.parseInt(input) >= 1 || Integer.parseInt(input) <= index)) {
                 System.out.println("Invalid symbol. Enter a number of a hero");
                 try {
@@ -106,31 +112,32 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-
-        return heroes.get(Integer.parseInt(input) - 1).getId().toString();
+        gamePlayController.setInput(heroes.get(Integer.parseInt(input) - 1).getId().toString());
+        gamePlayController.display();
     }
 
     @Override
     public void displayCreatePlayerView() {
         String heroName = getHeroName();
         String heroClass = getHeroClass();
-        try {
-            if (isHeroDefault()) {
-                characterController.createDefaultPerson(heroName, heroClass);
-            } else {
-                int level, attack, defense, hp;
+        while (true) {
+            try {
+                if (isHeroDefault()) {
+                    characterController.createDefaultPerson(heroName, heroClass);
+                } else {
+                    int level, attack, defense, hp;
 
-                level = getStat("Level");
-                attack = getStat("Attack");
-                defense = getStat("Defense");
-                hp = getStat("HP");
-                characterController.createPerson(heroName, heroClass, level, attack, defense, hp);
+                    level = getStat("Level");
+                    attack = getStat("Attack");
+                    defense = getStat("Defense");
+                    hp = getStat("HP");
+                    characterController.createPerson(heroName, heroClass, level, attack, defense, hp);
+                    break;
+                }
+            } catch (Exception e) {
+                displayError("Cannot create hero, please try again\n" + e.getMessage());
             }
-        } catch (Exception e) {
-            displayError("Cannot create hero, please try again\n" + e.getMessage());
-            displayCreatePlayerView();
         }
-
     }
 
     private String getHeroClass() {
@@ -229,7 +236,7 @@ public class ConsoleView implements WindowManager {
                 value = stdin.next();
             else
                 System.exit(0);
-            if (!value.matches("-?\\d+$") || Integer.parseInt(value) < 0) {
+            if (!value.matches("-?\\d+$")) {
                 System.out.println("\nInvalid " + stat + ". Please enter a number.");
                 try {
                     Thread.sleep(1000);
@@ -285,7 +292,7 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public boolean displayGameOver() {
+    public void displayGameOver() {
         String input = "";
         clearScreen();
         System.out.print(
@@ -301,7 +308,8 @@ public class ConsoleView implements WindowManager {
             input = stdin.next();
         else
             System.exit(0);
-        return input.toLowerCase().equals("y");
+        gamePlayController.setInput(input.toLowerCase());
+        gamePlayController.display();
     }
 
     @Override
@@ -320,7 +328,6 @@ public class ConsoleView implements WindowManager {
         }
     }
 
-    @Override
     public void displayMap(Map map, Person person) {
         for (int i = 0; i < map.getSize(); i++) {
             for (int j = 0; j < map.getSize(); j++) {
@@ -335,7 +342,7 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public String displayFightOrRun() {
+    public void displayFightOrRun() {
         String input = "";
         while (!(input.toLowerCase().equals("f") || input.toLowerCase().equals("r"))) {
             clearScreen();
@@ -361,7 +368,8 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        return input.toLowerCase();
+        gamePlayController.setInput(input.toLowerCase());
+        gamePlayController.display();
 
     }
 
@@ -382,7 +390,7 @@ public class ConsoleView implements WindowManager {
     }
 
     @Override
-    public String displayArtifact(Artifact artifact) {
+    public void displayArtifact(Artifact artifact) {
         String input = "";
         while (!(input.toLowerCase().equals("y") || input.toLowerCase().equals("n"))) {
             clearScreen();
@@ -408,16 +416,18 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        return input.toLowerCase();
+        gamePlayController.setInput(input.toLowerCase());
+        gamePlayController.display();
+
     }
 
     @Override
-    public String displayPlayView() {
-        clearScreen();
-        displayMap(characterController.getMap(), characterController.getPerson());
+    public void displayPlayView() {
         String input = "";
         while (!(input.toLowerCase().equals("n") || input.toLowerCase().equals("e") || input.toLowerCase().equals("s")
-                || input.toLowerCase().equals("w"))) {
+                || input.toLowerCase().equals("w") || input.toLowerCase().equals("q"))) {
+            clearScreen();
+            displayMap(characterController.getMap(), characterController.getPerson());
             System.out.print(
                     "\n********************************************************\n" +
                             "*                                                      *\n" +
@@ -431,7 +441,7 @@ public class ConsoleView implements WindowManager {
             else
                 System.exit(0);
             if (!(input.toLowerCase().equals("n") || input.toLowerCase().equals("e") || input.toLowerCase().equals("s")
-                    || input.toLowerCase().equals("w"))) {
+                    || input.toLowerCase().equals("w") || input.toLowerCase().equals("q"))) {
                 System.out.println("\nInvalid instruction. Please try again.");
                 try {
                     Thread.sleep(1000);
@@ -440,11 +450,13 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        return input.toLowerCase();
+        gamePlayController.setInput(input.toLowerCase());
+        gamePlayController.display();
+
     }
 
     @Override
-    public boolean displayWinView() {
+    public void displayWinView() {
         String input = "";
         clearScreen();
         System.out.print(
@@ -460,7 +472,9 @@ public class ConsoleView implements WindowManager {
             input = stdin.next();
         else
             System.exit(0);
-        return input.toLowerCase().equals("y");
+        gamePlayController.setInput(input.toLowerCase());
+        gamePlayController.display();
+
     }
 
     public void clearScreen() {

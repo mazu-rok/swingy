@@ -2,10 +2,6 @@ package com.amazurok.swingy.controller;
 
 import com.amazurok.swingy.exceptions.IllegalInputException;
 import com.amazurok.swingy.model.artifacts.Artifact;
-import com.amazurok.swingy.model.characters.Elf;
-import com.amazurok.swingy.model.characters.Knight;
-import com.amazurok.swingy.model.characters.Magician;
-import com.amazurok.swingy.model.characters.Orc;
 import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.model.map.Coordinates;
 import com.amazurok.swingy.model.map.Map;
@@ -41,7 +37,6 @@ public class CharacterController {
 
     public void createMap() {
         this.map = new Map(person.getLevel());
-
     }
 
     public void createDefaultPerson(String name, String type) throws DuplicateKeyException, IllegalInputException {
@@ -65,7 +60,7 @@ public class CharacterController {
         enemies = new ArrayList<>();
 
         String[] names = {"Thanos", "Mysterio", "Hela"};
-        for (int i = 0; i < person.getLevel() * 7; i++) {
+        for (int i = 0; i < person.getLevel() * 10; i++) {
             int name = rand.nextInt(3);
             int x = rand.nextInt(map.getSize());
             if (x == map.getSize()/2) {
@@ -121,7 +116,7 @@ public class CharacterController {
         return false;
     }
 
-    public void setPersonToCentre() throws DuplicateKeyException{
+    public void setPersonToCentre() throws DuplicateKeyException, IllegalInputException {
         this.map = new Map(person.getLevel());
         person.setCoordinates(new Coordinates(map.getSize()/2, map.getSize()/2));
         db.save(person);
@@ -153,15 +148,7 @@ public class CharacterController {
     }
 
     public void setArtifact(Artifact artifact) {
-        if (person instanceof Orc) {
-            ((Orc)person).setArtifact(artifact);
-        } else if (person instanceof Magician) {
-            ((Magician)person).setArtifact(artifact);
-        } else if (person instanceof Knight) {
-            ((Knight)person).setArtifact(artifact);
-        } else {
-            ((Elf)person).setArtifact(artifact);
-        }
+        person.setArtifact(artifact);
     }
 
     public boolean run() {
