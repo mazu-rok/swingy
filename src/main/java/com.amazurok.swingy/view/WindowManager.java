@@ -1,11 +1,9 @@
 package com.amazurok.swingy.view;
 
-import com.amazurok.swingy.exceptions.IllegalInputException;
 import com.amazurok.swingy.model.artifacts.Artifact;
 import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.model.map.Map;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface WindowManager {
@@ -20,5 +18,6 @@ public interface WindowManager {
     void displayForcedFightNotice();
     void displayArtifact(Artifact artifact);
     void displayPlayView();
+    void displayMap(Map map, Person person);
     void displayWinView();
 }

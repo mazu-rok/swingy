@@ -29,6 +29,12 @@ public class CharacterController {
     private Person person;
     private Coordinates previousCoordinates;
     @Getter
+    private Artifact lastArtifact;
+
+    @Getter
+    private Person winner;
+
+    @Getter
     private List<Person> enemies;
 
     public CharacterController(DBController db) {
@@ -60,8 +66,9 @@ public class CharacterController {
         enemies = new ArrayList<>();
 
         String[] names = {"Thanos", "Mysterio", "Hela"};
-        for (int i = 0; i < person.getLevel() * 10; i++) {
+        for (int i = 0; i < person.getLevel() * 20; i++) {
             int name = rand.nextInt(3);
+            int level = rand.nextInt(person.getLevel() + 3);
             int x = rand.nextInt(map.getSize());
             if (x == map.getSize()/2) {
                 x--;
@@ -71,7 +78,7 @@ public class CharacterController {
                 y--;
             }
             try {
-                this.enemies.add(CharacterFactory.createPerson(names[name], "Enemy", person.getLevel(), 0, 0, 0, new Coordinates(x, y)));
+                this.enemies.add(CharacterFactory.createPerson(names[name], "Enemy", level, 0, 0, 0, new Coordinates(x, y)));
             } catch (IllegalInputException e) {
                 log.error(e.getMessage());
             }
@@ -122,7 +129,7 @@ public class CharacterController {
         db.save(person);
     }
 
-    public Person fight() {
+    public void fight() {
         while (person.getHp() > 0 && currentEnemy.getHp() > 0) {
             person.punch(currentEnemy);
             if (currentEnemy.getHp() > 0) {
@@ -132,23 +139,25 @@ public class CharacterController {
         if (person.getHp() > 0) {
             person.incrementExperience(person.getLevel() * 3000);
             enemies.remove(currentEnemy);
-            return person;
+            winner = person;
+        } else {
+            winner = currentEnemy;
         }
-        return currentEnemy;
     }
 
-    public Artifact getArtifact() {
+    public boolean findArtifact() {
         int power = rand.nextInt(100);
         String[] artifacts = {"Armor", "Helm", "Weapon"};
         int ind = rand.nextInt(6);
         if (ind < 3) {
-            return ArtifactFactory.createArtifact(artifacts[ind], power);
+            lastArtifact = ArtifactFactory.createArtifact(artifacts[ind], power);
+            return true;
         }
-        return null;
+        return false;
     }
 
-    public void setArtifact(Artifact artifact) {
-        person.setArtifact(artifact);
+    public void setArtifact() {
+        person.setArtifact(lastArtifact);
     }
 
     public boolean run() {

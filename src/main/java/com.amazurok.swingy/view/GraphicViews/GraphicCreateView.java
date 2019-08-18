@@ -125,7 +125,7 @@ public class GraphicCreateView {
             public void actionPerformed(ActionEvent e)
             {
                 frame.dispose();
-                gamePlayController.setInput("b");
+//                gamePlayController.setInput("b");
             }
         });
 

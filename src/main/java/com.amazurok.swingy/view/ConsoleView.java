@@ -35,7 +35,7 @@ public class ConsoleView implements WindowManager {
                             "*                                     *\n" +
                             "*           Welcome To Swingy         *\n" +
                             "*                                     *\n" +
-                            "*           Make your choice?         *\n" +
+                            "*           Make your choice!         *\n" +
                             "*    1. Create new player             *\n" +
                             "*    2. Select a saved player         *\n" +
                             "*    3. Exit                          *\n" +
@@ -55,8 +55,8 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        gamePlayController.setInput(input);
-        gamePlayController.display();
+        gamePlayController.handleInput(input);
+        gamePlayController.displayGame();
     }
 
     @Override
@@ -100,8 +100,8 @@ public class ConsoleView implements WindowManager {
             else
                 System.exit(0);
             if (input.equals("q") || input.equals("b")) {
-                gamePlayController.setInput(input);
-                gamePlayController.display();
+                gamePlayController.handleInput(input);
+                gamePlayController.displayGame();
                 return;
             } else if (!(input.matches("\\d+$") && Integer.parseInt(input) >= 1 || Integer.parseInt(input) <= index)) {
                 System.out.println("Invalid symbol. Enter a number of a hero");
@@ -112,8 +112,8 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        gamePlayController.setInput(heroes.get(Integer.parseInt(input) - 1).getId().toString());
-        gamePlayController.display();
+        gamePlayController.handleInput(heroes.get(Integer.parseInt(input) - 1).getId().toString());
+        gamePlayController.displayGame();
     }
 
     @Override
@@ -124,6 +124,7 @@ public class ConsoleView implements WindowManager {
             try {
                 if (isHeroDefault()) {
                     characterController.createDefaultPerson(heroName, heroClass);
+                    break;
                 } else {
                     int level, attack, defense, hp;
 
@@ -138,6 +139,9 @@ public class ConsoleView implements WindowManager {
                 displayError("Cannot create hero, please try again\n" + e.getMessage());
             }
         }
+        characterController.createEnemy();
+        gamePlayController.handleInput("");
+        gamePlayController.displayGame();
     }
 
     private String getHeroClass() {
@@ -275,6 +279,9 @@ public class ConsoleView implements WindowManager {
         } catch (InterruptedException e) {
             log.error(e.getMessage());
         }
+        gamePlayController.handleInput("");
+        gamePlayController.displayGame();
+
     }
 
     @Override
@@ -308,8 +315,8 @@ public class ConsoleView implements WindowManager {
             input = stdin.next();
         else
             System.exit(0);
-        gamePlayController.setInput(input.toLowerCase());
-        gamePlayController.display();
+        gamePlayController.handleInput(input.toLowerCase());
+        gamePlayController.displayGame();
     }
 
     @Override
@@ -326,8 +333,10 @@ public class ConsoleView implements WindowManager {
         } catch (InterruptedException e) {
             log.error(e.getMessage());
         }
+        gamePlayController.handleInput("");
     }
 
+    @Override
     public void displayMap(Map map, Person person) {
         for (int i = 0; i < map.getSize(); i++) {
             for (int j = 0; j < map.getSize(); j++) {
@@ -368,9 +377,8 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        gamePlayController.setInput(input.toLowerCase());
-        gamePlayController.display();
-
+        gamePlayController.handleInput(input.toLowerCase());
+        gamePlayController.displayGame();
     }
 
     @Override
@@ -387,6 +395,8 @@ public class ConsoleView implements WindowManager {
         } catch (InterruptedException e) {
             log.error(e.getMessage());
         }
+        gamePlayController.handleInput("");
+        gamePlayController.displayGame();
     }
 
     @Override
@@ -416,8 +426,8 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        gamePlayController.setInput(input.toLowerCase());
-        gamePlayController.display();
+        gamePlayController.handleInput(input.toLowerCase());
+        gamePlayController.displayGame();
 
     }
 
@@ -450,8 +460,8 @@ public class ConsoleView implements WindowManager {
                 }
             }
         }
-        gamePlayController.setInput(input.toLowerCase());
-        gamePlayController.display();
+        gamePlayController.handleInput(input.toLowerCase());
+        gamePlayController.displayGame();
 
     }
 
@@ -472,8 +482,8 @@ public class ConsoleView implements WindowManager {
             input = stdin.next();
         else
             System.exit(0);
-        gamePlayController.setInput(input.toLowerCase());
-        gamePlayController.display();
+        gamePlayController.handleInput(input.toLowerCase());
+        gamePlayController.displayGame();
 
     }
 

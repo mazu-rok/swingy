@@ -16,7 +16,7 @@ public class GraphicStartView {
 
     private JFrame frame = new JFrame("Swingy");
     private  ButtonGroup btnGroup = new ButtonGroup();
-    private  JButton btnContinue = new JButton("Proceed");
+    private  JButton btnContinue = new JButton("Continue");
     private  JPanel panelWelcome = new JPanel();
     private  JLabel labelWelcome = new JLabel("Welcome to Swingy");
     private  JRadioButton rbtnNewHero = new JRadioButton("Create a hero");
@@ -54,11 +54,7 @@ public class GraphicStartView {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                frame.dispose();
-                if (rbtnNewHero.isSelected())
-                    controller.setInput("1");
-                else
-                    controller.setInput("2");
+
             }
         });
     }

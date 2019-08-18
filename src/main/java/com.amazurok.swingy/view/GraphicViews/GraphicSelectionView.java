@@ -111,7 +111,7 @@ public class GraphicSelectionView {
         btnContinue.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setInput(selectedHero);
+//                controller.setInput(selectedHero);
                 frame.dispose();
             }
         });
@@ -120,7 +120,7 @@ public class GraphicSelectionView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                controller.setInput("b");
+//                controller.setInput("b");
             }
         });
 
@@ -129,7 +129,7 @@ public class GraphicSelectionView {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> details = getHeroDetails(heroes);
                 info.setText(details.get(checkboxOptions.getSelectedIndex()));
-                controller.setInput(heroes.get(checkboxOptions.getSelectedIndex()).getId().toString());
+//                controller.setInput(heroes.get(checkboxOptions.getSelectedIndex()).getId().toString());
             }
         });
     }

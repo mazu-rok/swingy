@@ -73,42 +73,42 @@ public class GraphicPlayView {
         btnNorth.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gamePlayController.setInput("n");
+//                gamePlayController.setInput("n");
             }
         });
 
         btnSouth.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gamePlayController.setInput("s");
+//                gamePlayController.setInput("s");
             }
         });
 
         btnWest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gamePlayController.setInput("w");
+//                gamePlayController.setInput("w");
             }
         });
 
         btnEast.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gamePlayController.setInput("e");
+//                gamePlayController.setInput("e");
             }
         });
 
         btnSwitch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gamePlayController.setInput("c");
+//                gamePlayController.setInput("c");
             }
         });
 
         btnQuit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gamePlayController.setInput("q");
+//                gamePlayController.setInput("q");
             }
         });
     }

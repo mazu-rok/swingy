@@ -7,6 +7,7 @@ import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.view.ConsoleView;
 import com.amazurok.swingy.view.GraphicViews.GraphicView;
 import com.amazurok.swingy.view.WindowManager;
+import javafx.beans.WeakInvalidationListener;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ import java.util.List;
 public class GamePlayController {
     Logger log = LoggerFactory.getLogger(GamePlayController.class);
 
-    private enum GameStage {START, SELECTION, CREATION, PLAY, FIGHT, RUN, WIN, GAME_OVER, QUIT}
+    private enum GameStage {START, SELECTION, CREATION, PLAY, RUN_FIGHT, FORCED_FIGHT, FIGHT, RUN, ARTIFACT, WIN, GAME_OVER, QUIT}
 
     private DBController db = new DBController();
     private CharacterController characterController = new CharacterController(db);
@@ -26,9 +27,6 @@ public class GamePlayController {
 
     private WindowManager windowManager;
     private GameStage stage = GameStage.START;
-
-    @Setter
-    private String input = "";
 
     public GamePlayController(String mode) {
         setOutMode(mode);
@@ -45,7 +43,7 @@ public class GamePlayController {
         }
     }
 
-    public void display() {
+    public void displayGame() {
         switch (stage) {
             case START:
                 windowManager.displayStartView();
@@ -60,11 +58,21 @@ public class GamePlayController {
             case PLAY:
                 windowManager.displayPlayView();
                 break;
+            case RUN_FIGHT:
+                windowManager.displayFightOrRun();
+                break;
+            case FORCED_FIGHT:
+                windowManager.displayForcedFightNotice();
+                break;
             case FIGHT:
-                Person person = characterController.fight();
-                windowManager.displayFightReport(person);
+                characterController.fight();
+                windowManager.displayFightReport(characterController.getWinner());
                 break;
             case RUN:
+                break;
+            case ARTIFACT:
+                windowManager.displayArtifact(characterController.getLastArtifact());
+                break;
             case WIN:
                 windowManager.displayWinView();
                 break;
@@ -77,106 +85,101 @@ public class GamePlayController {
         }
     }
 
-    public void game() {
-        windowManager.displayStartView();
-        while (true) {
-            switch (stage) {
-                case START:
-                    if (input.equals("1")) {
-                        stage = GameStage.CREATION;
-                    } else if (input.equals("2")) {
-                        stage = GameStage.SELECTION;
-                    } else if (input.equals("3")){
-                        stage = GameStage.QUIT;
-                    }
-                    input = "";
-                    break;
-                case SELECTION:
-                    if (input.equals("q")) {
-                        stage = GameStage.QUIT;
-                    } else if (input.equals("b")) {
-                        stage = GameStage.START;
-                    } else {
-                        characterController.setPerson(db.getHeroById(input));
-                        characterController.createEnemy();
-                        stage = GameStage.PLAY;
-                    }
-                    break;
-                case CREATION:
+    public void handleInput(String input) {
+        switch (stage) {
+            case START:
+                if (input.equals("1")) {
+                    stage = GameStage.CREATION;
+                } else if (input.equals("2")) {
+                    stage = GameStage.SELECTION;
+                } else if (input.equals("3")) {
+                    stage = GameStage.QUIT;
+                }
+                break;
+            case SELECTION:
+                if (input.equals("q")) {
+                    stage = GameStage.QUIT;
+                } else if (input.equals("b")) {
+                    stage = GameStage.START;
+                } else {
+                    characterController.setPerson(db.getHeroById(input));
                     characterController.createEnemy();
                     stage = GameStage.PLAY;
+                }
+                break;
+            case CREATION:
+                stage = GameStage.PLAY;
+                break;
+            case PLAY:
+                if (input.equals("q")) {
+                    stage = GameStage.QUIT;
                     break;
-                case PLAY:
-                    if (input.equals("q")) {
+                } else if (input.equals("g") || input.equals("c")) {
+                    setOutMode(input);
+                    break;
+                }
+                if (characterController.move(input)) {
+                    stage = GameStage.WIN;
+                }
+                if (characterController.isItTimeToFight()) {
+                    stage = GameStage.RUN_FIGHT;
+                }
+                break;
+            case RUN_FIGHT:
+                if (input.equals("r") && characterController.run()) {
+                    stage = GameStage.RUN;
+                } else {
+                    stage = GameStage.FORCED_FIGHT;
+                }
+                break;
+            case FORCED_FIGHT:
+                stage = GameStage.FIGHT;
+                break;
+            case FIGHT:
+                if (characterController.getWinner().getType().equals("Enemy")) {
+                    stage = GameStage.GAME_OVER;
+                } else {
+                    if (characterController.findArtifact()) {
+                        stage = GameStage.ARTIFACT;
+                    }
+                    characterController.createMap();
+                    stage = GameStage.PLAY;
+                }
+                break;
+            case RUN:
+                break;
+            case ARTIFACT:
+                if (input.equals("y")) {
+                    characterController.setArtifact();
+                }
+                stage = GameStage.PLAY;
+                break;
+            case WIN:
+                if (input.equals("y")) {
+                    stage = GameStage.PLAY;
+                    characterController.getPerson().incrementExperience(2000);
+                    try {
+                        characterController.setPersonToCentre();
+                    } catch (IllegalInputException e) {
+                        windowManager.displayError(e.getMessage());
                         stage = GameStage.QUIT;
                         break;
-                    } else if (input.equals("g") || input.equals("c")) {
-                        setOutMode(input);
-                        break;
                     }
-                    if (characterController.move(input)) {
-                        stage = GameStage.WIN;
-                    }
-                    if (characterController.isItTimeToFight()) {
-                        windowManager.displayFightOrRun();
-                        if (input.equals("f")) {
-                            stage = GameStage.FIGHT;
-                        } else {
-                            stage = GameStage.RUN;
-                        }
-                    }
-                    break;
-                case FIGHT:
-                    Person person = characterController.fight();
-                    if (person.getType().equals("Enemy")) {
-                        stage = GameStage.GAME_OVER;
-                    } else {
-                        Artifact artifact = characterController.getArtifact();
-                        if (artifact != null) {
-                            windowManager.displayArtifact(artifact);
-                            if (input.equals("y")) {
-                                characterController.setArtifact(artifact);
-                            }
-                        }
-                        characterController.createMap();
-                        stage = GameStage.PLAY;
-                    }
-                    break;
-                case RUN:
-                    if (characterController.run()) {
-                        stage = GameStage.PLAY;
-                    } else {
-                        windowManager.displayForcedFightNotice();
-                        stage = GameStage.FIGHT;
-                    }
-                    break;
-                case WIN:
-                    if (input.equals("y")) {
-                        stage = GameStage.PLAY;
-                        characterController.getPerson().incrementExperience(2000);
-                        try {
-                            characterController.setPersonToCentre();
-                        } catch (IllegalInputException e) {
-                            windowManager.displayError(e.getMessage());
-                            stage = GameStage.QUIT;
-                            break;
-                        }
-                        characterController.createEnemy();
-                    } else {
-                        stage = GameStage.QUIT;
-                    }
-                    break;
-                case GAME_OVER:
-                    if (input.equals("y")) {
-                        stage = GameStage.START;
-                    } else {
-                        stage = GameStage.QUIT;
-                    }
-                    break;
-                case QUIT:
-                    System.exit(0);
-                    break;
-            }
+                    characterController.createEnemy();
+                } else {
+                    stage = GameStage.QUIT;
+                }
+                break;
+            case GAME_OVER:
+                if (input.equals("y")) {
+                    stage = GameStage.START;
+                } else {
+                    stage = GameStage.QUIT;
+                }
+                break;
+            case QUIT:
+                System.exit(0);
+                break;
         }
     }
 }

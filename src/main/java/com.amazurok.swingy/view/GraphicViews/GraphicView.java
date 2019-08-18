@@ -18,6 +18,8 @@ public class GraphicView implements WindowManager {
     private CharacterController characterController;
     private GamePlayController gamePlayController;
 
+    private JFrame frame = new JFrame("Swingy");
+
     private GraphicStartView graphicStartView;
     private GraphicSelectionView graphicSelectionView;
     private GraphicCreateView graphicCreateView;
@@ -37,6 +39,8 @@ public class GraphicView implements WindowManager {
 
     @Override
     public void displayStartView() {
+        JPanel pan = (new Start()).getStartPanel();
+        frame.setContentPane(pan);
         graphicStartView.displayStartView();
     }
 
@@ -70,9 +74,9 @@ public class GraphicView implements WindowManager {
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, options1, null);
         if (dialogResult == JOptionPane.YES_OPTION) {
-            gamePlayController.setInput("y");
+//            gamePlayController.setInput("y");
         } else {
-            gamePlayController.setInput("n");
+//            gamePlayController.setInput("n");
         }
         graphicPlayView.getFrame().dispose();
     }
@@ -88,10 +92,10 @@ public class GraphicView implements WindowManager {
     public void displayFightOrRun() {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int dialogResult = JOptionPane.showConfirmDialog(graphicPlayView.getFrame(), "Make your choice, fight or run?", "Enemy encountered", dialogButton);
-        if (dialogResult == JOptionPane.YES_OPTION)
-            gamePlayController.setInput("f");
-        else
-            gamePlayController.setInput("r");
+//        if (dialogResult == JOptionPane.YES_OPTION)
+//            gamePlayController.setInput("f");
+//        else
+//            gamePlayController.setInput("r");
     }
 
     @Override
@@ -103,6 +107,11 @@ public class GraphicView implements WindowManager {
     @Override
     public void displayArtifact(Artifact artifact) {
 
+    }
+
+    @Override
+    public void displayMap(Map map, Person person) {
+        graphicPlayView.drawMap();
     }
 
     @Override

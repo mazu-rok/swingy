@@ -11,7 +11,7 @@ public class Main {
 
         if (args.length == 1) {
             GamePlayController gamePlayController = new GamePlayController(args[0]);
-            gamePlayController.game();
+            gamePlayController.displayGame();
         } else {
             log.error("Only one argument is allowed");
         }
