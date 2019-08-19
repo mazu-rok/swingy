@@ -39,8 +39,6 @@ public class GraphicView implements WindowManager {
 
     @Override
     public void displayStartView() {
-        JPanel pan = (new Start()).getStartPanel();
-        frame.setContentPane(pan);
         graphicStartView.displayStartView();
     }
 

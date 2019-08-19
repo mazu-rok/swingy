@@ -19,18 +19,18 @@ public class GraphicStartView {
     private  JButton btnContinue = new JButton("Continue");
     private  JPanel panelWelcome = new JPanel();
     private  JLabel labelWelcome = new JLabel("Welcome to Swingy");
-    private  JRadioButton rbtnNewHero = new JRadioButton("Create a hero");
-    private  JRadioButton rbtnPreviousHero = new JRadioButton("Select a previous hero.");
+    private  JRadioButton createHero = new JRadioButton("Create a hero");
+    private  JRadioButton selectHero = new JRadioButton("Select a previous hero.");
 
     public GraphicStartView(GamePlayController controller)
     {
         this.controller = controller;
+
     }
 
 
     private  void initStartView()
     {
-        setColors();
         setBounds();
         setListeners();
         addToPanel();
@@ -39,44 +39,39 @@ public class GraphicStartView {
     private  void addToPanel()
     {
         panelWelcome.add(btnContinue);
-        panelWelcome.add(rbtnNewHero);
-        panelWelcome.add(rbtnPreviousHero);
+        panelWelcome.add(createHero);
+        panelWelcome.add(selectHero);
         panelWelcome.add(labelWelcome);
-        rbtnNewHero.setSelected(true);
-        btnGroup.add(rbtnNewHero);
-        btnGroup.add(rbtnPreviousHero);
+        createHero.setSelected(true);
+        btnGroup.add(createHero);
+        btnGroup.add(selectHero);
     }
 
     private  void setListeners()
     {
-        btnContinue.addActionListener(new ActionListener()
-        {
+        btnContinue.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-
+                if (createHero.isSelected()) {
+                    controller.handleInput("1");
+                } else {
+                    controller.handleInput("2");
+                }
+                controller.displayGame();
+                frame.dispose();
             }
         });
     }
 
     private  void setBounds()
     {
-        labelWelcome.setBounds(180, 10 ,200,20);
-        btnContinue.setBounds(200, 120 ,100,20);
-        rbtnNewHero.setBounds(100,  60,200,40);
-        rbtnPreviousHero.setBounds(300, 60 ,200,40);
-    }
+        labelWelcome.setBounds(140, 10 ,200,20);
+        createHero.setBounds(20,  60,200,40);
+        selectHero.setBounds(200, 60 ,200,40);
+        btnContinue.setBounds(160, 120 ,100,20);
 
-    private  void setColors()
-    {
-        labelWelcome.setForeground(Color.WHITE);
-        rbtnNewHero.setBackground(Color.DARK_GRAY);
-        rbtnPreviousHero.setBackground(Color.DARK_GRAY);
-        rbtnNewHero.setForeground(Color.WHITE);
-        rbtnPreviousHero.setForeground(Color.WHITE);
-        panelWelcome.setBackground(Color.DARK_GRAY);
     }
-
 
     public  void displayStartView()
     {
@@ -84,9 +79,7 @@ public class GraphicStartView {
 
         frame.setContentPane(panelWelcome);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(500, 200));
+        frame.setPreferredSize(new Dimension(400, 200));
         frame.setResizable(false);
         frame.setLayout(null);
         frame.pack();
