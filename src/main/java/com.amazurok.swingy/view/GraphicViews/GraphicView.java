@@ -72,28 +72,28 @@ public class GraphicView implements WindowManager {
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, options1, null);
         if (dialogResult == JOptionPane.YES_OPTION) {
-//            gamePlayController.setInput("y");
+            gamePlayController.handleInput("y");
         } else {
-//            gamePlayController.setInput("n");
+            gamePlayController.handleInput("n");
         }
         graphicPlayView.getFrame().dispose();
+        gamePlayController.displayGame();
     }
 
     @Override
     public void displayQuitDialogue() {
-        int dialogButton = JOptionPane.YES_NO_OPTION;
-        int dialogResult = JOptionPane.showConfirmDialog (graphicPlayView.getFrame(), "Goodbye!!!","Quite game",dialogButton);
+        JOptionPane.showMessageDialog (graphicPlayView.getFrame(), "Goodbye!!!","Quite game", JOptionPane.INFORMATION_MESSAGE);
         graphicPlayView.getFrame().dispose();
     }
 
     @Override
     public void displayFightOrRun() {
-        int dialogButton = JOptionPane.YES_NO_OPTION;
-        int dialogResult = JOptionPane.showConfirmDialog(graphicPlayView.getFrame(), "Make your choice, fight or run?", "Enemy encountered", dialogButton);
-//        if (dialogResult == JOptionPane.YES_OPTION)
-//            gamePlayController.setInput("f");
-//        else
-//            gamePlayController.setInput("r");
+        int dialogResult = JOptionPane.showConfirmDialog(graphicPlayView.getFrame(), "You found enemy, do you want to fight?", "Enemy encountered", JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION)
+            gamePlayController.handleInput("f");
+        else
+            gamePlayController.handleInput("r");
+        gamePlayController.displayGame();
     }
 
     @Override
@@ -104,7 +104,13 @@ public class GraphicView implements WindowManager {
 
     @Override
     public void displayArtifact(Artifact artifact) {
-
+        String message = String.format("You found %s with power %d", artifact.getType(), artifact.getPower());
+        int dialogResult = JOptionPane.showConfirmDialog(graphicPlayView.getFrame(), message, "Artifact", JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION)
+            gamePlayController.handleInput("y");
+        else
+            gamePlayController.handleInput("n");
+        gamePlayController.displayGame();
     }
 
     @Override
@@ -119,6 +125,12 @@ public class GraphicView implements WindowManager {
 
     @Override
     public void displayWinView() {
+        int dialogResult = JOptionPane.showConfirmDialog(graphicPlayView.getFrame(), "You win!!!\nDo you want to continue?", "WIN", JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION)
+            gamePlayController.handleInput("y");
+        else
+            gamePlayController.handleInput("n");
+        gamePlayController.displayGame();
 
     }
 }

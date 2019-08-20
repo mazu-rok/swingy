@@ -270,9 +270,13 @@ public class ConsoleView implements WindowManager {
                             "\tExperience: %d\n" +
                             "\tAttack: %d\n" +
                             "\tDefense: %d\n" +
-                            "\tHP: %d\n",
+                            "\tHP: %d\n" +
+                            "\tArmor: %d\n" +
+                            "\tHelm: %d\n" +
+                            "\tWeapon: %d",
                     player.getName(), player.getType(), player.getLevel(), player.getExperience(), player.getAttack(),
-                    player.getDefense(), player.getHp()
+                    player.getDefense(), player.getHp(), player.getArmor() != null ? player.getArmor().getPower() : 0,
+                    player.getHelm() != null ? player.getHelm().getPower() : 0, player.getWeapon() != null ? player.getWeapon().getPower() : 0
             );
             System.out.println(line);
             Thread.sleep(2000);
@@ -435,7 +439,7 @@ public class ConsoleView implements WindowManager {
     public void displayPlayView() {
         String input = "";
         while (!(input.toLowerCase().equals("n") || input.toLowerCase().equals("e") || input.toLowerCase().equals("s")
-                || input.toLowerCase().equals("w") || input.toLowerCase().equals("q"))) {
+                || input.toLowerCase().equals("w") || input.toLowerCase().equals("q") || input.toLowerCase().equals("g"))) {
             clearScreen();
             displayMap(characterController.getMap(), characterController.getPerson());
             System.out.print(
@@ -451,7 +455,7 @@ public class ConsoleView implements WindowManager {
             else
                 System.exit(0);
             if (!(input.toLowerCase().equals("n") || input.toLowerCase().equals("e") || input.toLowerCase().equals("s")
-                    || input.toLowerCase().equals("w") || input.toLowerCase().equals("q"))) {
+                    || input.toLowerCase().equals("w") || input.toLowerCase().equals("q") || input.toLowerCase().equals("g"))) {
                 System.out.println("\nInvalid instruction. Please try again.");
                 try {
                     Thread.sleep(1000);

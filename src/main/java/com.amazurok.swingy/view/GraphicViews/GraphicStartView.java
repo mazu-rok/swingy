@@ -12,12 +12,12 @@ import java.awt.event.ActionListener;
 public class GraphicStartView {
     Logger log = LoggerFactory.getLogger(GraphicStartView.class);
 
-    GamePlayController controller;
+    private GamePlayController controller;
 
     private JFrame frame = new JFrame("Swingy");
     private  ButtonGroup btnGroup = new ButtonGroup();
     private  JButton btnContinue = new JButton("Continue");
-    private  JPanel panelWelcome = new JPanel();
+    private  JPanel panelStart = new JPanel();
     private  JLabel labelWelcome = new JLabel("Welcome to Swingy");
     private  JRadioButton createHero = new JRadioButton("Create a hero");
     private  JRadioButton selectHero = new JRadioButton("Select a previous hero.");
@@ -26,28 +26,35 @@ public class GraphicStartView {
     {
         this.controller = controller;
 
-    }
+        // Set size and position
+        labelWelcome.setBounds(140, 10 ,200,20);
+        createHero.setBounds(20,  40,200,40);
+        selectHero.setBounds(200, 40 ,200,40);
+        btnContinue.setBounds(150, 90 ,100,40);
 
-
-    private  void initStartView()
-    {
-        setBounds();
-        setListeners();
-        addToPanel();
-    }
-
-    private  void addToPanel()
-    {
-        panelWelcome.add(btnContinue);
-        panelWelcome.add(createHero);
-        panelWelcome.add(selectHero);
-        panelWelcome.add(labelWelcome);
+        // Put items to panel
+        panelStart.add(btnContinue);
+        panelStart.add(createHero);
+        panelStart.add(selectHero);
+        panelStart.add(labelWelcome);
         createHero.setSelected(true);
         btnGroup.add(createHero);
         btnGroup.add(selectHero);
+
+        // Set up frame
+        frame.setContentPane(panelStart);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(400, 160));
+        frame.setResizable(false);
+        frame.setLayout(null);
+        frame.pack();
+        frame.setLocation(500, 500);
+
+        startListeners();
+
     }
 
-    private  void setListeners()
+    private void startListeners()
     {
         btnContinue.addActionListener(new ActionListener() {
             @Override
@@ -64,27 +71,10 @@ public class GraphicStartView {
         });
     }
 
-    private  void setBounds()
-    {
-        labelWelcome.setBounds(140, 10 ,200,20);
-        createHero.setBounds(20,  60,200,40);
-        selectHero.setBounds(200, 60 ,200,40);
-        btnContinue.setBounds(160, 120 ,100,20);
 
-    }
 
     public  void displayStartView()
     {
-        initStartView();
-
-        frame.setContentPane(panelWelcome);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 200));
-        frame.setResizable(false);
-        frame.setLayout(null);
-        frame.pack();
         frame.setVisible(true);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
     }
 }

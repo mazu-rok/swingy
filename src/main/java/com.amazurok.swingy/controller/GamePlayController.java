@@ -108,7 +108,11 @@ public class GamePlayController {
                 }
                 break;
             case CREATION:
-                stage = GameStage.PLAY;
+                if (input.equals("b")) {
+                    stage = GameStage.START;
+                } else {
+                    stage = GameStage.PLAY;
+                }
                 break;
             case PLAY:
                 if (input.equals("q")) {
@@ -126,7 +130,9 @@ public class GamePlayController {
                 }
                 break;
             case RUN_FIGHT:
-                if (input.equals("r") && characterController.run()) {
+                if (input.equals("f")) {
+                    stage = GameStage.FIGHT;
+                } else if (input.equals("r") && characterController.run()) {
                     stage = GameStage.RUN;
                 } else {
                     stage = GameStage.FORCED_FIGHT;
@@ -141,9 +147,10 @@ public class GamePlayController {
                 } else {
                     if (characterController.findArtifact()) {
                         stage = GameStage.ARTIFACT;
+                    } else {
+                        stage = GameStage.PLAY;
                     }
                     characterController.createMap();
-                    stage = GameStage.PLAY;
                 }
                 break;
             case RUN:

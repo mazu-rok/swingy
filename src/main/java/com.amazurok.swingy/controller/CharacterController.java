@@ -137,7 +137,7 @@ public class CharacterController {
             }
         }
         if (person.getHp() > 0) {
-            person.incrementExperience(person.getLevel() * 3000);
+            person.incrementExperience(person.getLevel() * 500);
             enemies.remove(currentEnemy);
             winner = person;
         } else {
@@ -148,8 +148,8 @@ public class CharacterController {
     public boolean findArtifact() {
         int power = rand.nextInt(100);
         String[] artifacts = {"Armor", "Helm", "Weapon"};
-        int ind = rand.nextInt(6);
-        if (ind < 3) {
+        int ind = rand.nextInt(3);
+        if (ind < 4) {
             lastArtifact = ArtifactFactory.createArtifact(artifacts[ind], power);
             return true;
         }
