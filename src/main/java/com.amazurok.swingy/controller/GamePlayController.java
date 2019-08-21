@@ -1,21 +1,17 @@
 package com.amazurok.swingy.controller;
 
 import com.amazurok.swingy.exceptions.IllegalInputException;
-import com.amazurok.swingy.model.Game;
-import com.amazurok.swingy.model.artifacts.Artifact;
 import com.amazurok.swingy.model.characters.Person;
 import com.amazurok.swingy.view.ConsoleView;
 import com.amazurok.swingy.view.GraphicViews.GraphicView;
 import com.amazurok.swingy.view.WindowManager;
-import javafx.beans.WeakInvalidationListener;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class GamePlayController {
-    Logger log = LoggerFactory.getLogger(GamePlayController.class);
+    private Logger log = LoggerFactory.getLogger(GamePlayController.class);
 
     private enum GameStage {START, SELECTION, CREATION, PLAY, RUN_FIGHT, FORCED_FIGHT, FIGHT, RUN, ARTIFACT, WIN, GAME_OVER, QUIT}
 
@@ -63,10 +59,15 @@ public class GamePlayController {
                 break;
             case FORCED_FIGHT:
                 windowManager.displayForcedFightNotice();
+
+                handleInput("");
+                displayGame();
                 break;
             case FIGHT:
                 characterController.fight();
                 windowManager.displayFightReport(characterController.getWinner());
+                handleInput("");
+                displayGame();
                 break;
             case RUN:
                 break;
@@ -103,7 +104,7 @@ public class GamePlayController {
                     stage = GameStage.START;
                 } else {
                     characterController.setPerson(db.getHeroById(input));
-                    characterController.createEnemy();
+                    characterController.createEnemies();
                     stage = GameStage.PLAY;
                 }
                 break;
@@ -111,6 +112,7 @@ public class GamePlayController {
                 if (input.equals("b")) {
                     stage = GameStage.START;
                 } else {
+                    characterController.createEnemies();
                     stage = GameStage.PLAY;
                 }
                 break;
@@ -172,7 +174,7 @@ public class GamePlayController {
                         stage = GameStage.QUIT;
                         break;
                     }
-                    characterController.createEnemy();
+                    characterController.createEnemies();
                 } else {
                     stage = GameStage.QUIT;
                 }

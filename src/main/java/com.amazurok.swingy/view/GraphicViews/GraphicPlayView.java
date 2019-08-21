@@ -29,7 +29,6 @@ public class GraphicPlayView {
     private JButton btnEast = new JButton("East");
     private JButton btnSwitch = new JButton("Switch to console");
     private JPanel mapPanel = new JPanel();
-    private JTextArea reportText = new JTextArea();
     private JTextArea statsText = new JTextArea();
 
     public GraphicPlayView(GamePlayController gamePlayController, CharacterController characterController) {
@@ -40,7 +39,6 @@ public class GraphicPlayView {
         JPanel statsPanel = new JPanel();
         statsPanel.setLayout(null);
 
-        reportText.setEditable(false);
         JPanel reportPanel = new JPanel();
         reportPanel.setLayout(null);
 
@@ -54,18 +52,12 @@ public class GraphicPlayView {
         statsScroll.setBounds(20, 40, 270, 460);
         statsPanel.setPreferredSize(new Dimension(295, 495));
 
-        JLabel reportLabel = new JLabel("Battle report");
-        reportLabel.setBounds(120, 10, 100, 20);
-        JScrollPane reportScroll = new JScrollPane(reportText);
-        reportScroll.setBounds(0, 40, 270, 460);
-        reportPanel.setPreferredSize(new Dimension(295, 495));
-
-        btnNorth.setBounds(560, 20, 120, 40);
-        btnSouth.setBounds(560, 100, 120, 40);
-        btnEast.setBounds(700, 60, 120, 40);
-        btnWest.setBounds(420, 60, 120, 40);
-        btnQuit.setBounds(700, 140, 160, 40);
-        btnSwitch.setBounds(380, 140, 160, 40);
+        btnNorth.setBounds(460, 10, 120, 40);
+        btnWest.setBounds(320, 50, 120, 40);
+        btnEast.setBounds(600, 50, 120, 40);
+        btnSouth.setBounds(460, 90, 120, 40);
+        btnSwitch.setBounds(280, 130, 160, 40);
+        btnQuit.setBounds(600, 130, 160, 40);
         movementPanel.setPreferredSize(new Dimension(1200, 195));
         arenaPanel.setPreferredSize(new Dimension(600, 495));
         JLabel arenaLabel = new JLabel("Arena");
@@ -75,8 +67,6 @@ public class GraphicPlayView {
         // Add to panel
         statsPanel.add(statsLabel);
         statsPanel.add(statsScroll);
-        reportPanel.add(reportLabel);
-        reportPanel.add(reportScroll);
         movementPanel.add(btnNorth);
         movementPanel.add(btnSouth);
         movementPanel.add(btnEast);
@@ -94,7 +84,7 @@ public class GraphicPlayView {
         frame.add(movementPanel, BorderLayout.SOUTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setPreferredSize(new Dimension(1200, 720));
+        frame.setPreferredSize(new Dimension(920, 720));
         frame.setLocation(500, 500);
         frame.setResizable(false);
         frame.pack();
@@ -185,13 +175,16 @@ public class GraphicPlayView {
 
     private void displayStats() {
         Person person = characterController.getPerson();
-        String detail = "\n\tName: " + person.getName() + "\n\n\n";
-        detail += "\tClass: " + person.getType() + "\n\n\n";
-        detail += "\tLevel: " + person.getLevel() + "\n\n\n";
-        detail += "\tExp: " + person.getExperience() + "\n\n\n";
-        detail += "\tAtk: " + person.getAttack() + "\n\n\n";
-        detail += "\tDef: " + person.getDefense() + "\n\n\n";
-        detail += "\tHp: " + person.getHp() + "\n\n\n";
+        String detail = "\n   Name: " + person.getName() + "\n";
+        detail += "\tClass: " + person.getType() + "\n";
+        detail += "\tLevel: " + person.getLevel() + "\n";
+        detail += "\tExp: " + person.getExperience() + "\n";
+        detail += "\tAtk: " + person.getAttack() + "\n";
+        detail += "\tDef: " + person.getDefense() + "\n";
+        detail += "\tHp: " + person.getHp() + "\n";
+        detail += "\tArmor: " + person.getArmor().getPower() + "\n";
+        detail += "\tHelm: " + person.getHelm().getPower() + "\n";
+        detail += "\tWeapon: " + person.getWeapon().getPower() + "\n";
         statsText.setText(detail);
     }
 
@@ -212,6 +205,6 @@ public class GraphicPlayView {
                 player.getDefense(), player.getHp(), player.getArmor() != null ? player.getArmor().getPower() : 0,
                 player.getHelm() != null ? player.getHelm().getPower() : 0, player.getWeapon() != null ? player.getWeapon().getPower() : 0
         );
-        reportText.setText(line);
+        JOptionPane.showMessageDialog(null, line);
     }
 }

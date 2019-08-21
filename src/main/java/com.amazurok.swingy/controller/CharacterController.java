@@ -42,7 +42,7 @@ public class CharacterController {
     }
 
     public void createMap() {
-        this.map = new Map(person.getLevel());
+            this.map = new Map(person.getLevel());
     }
 
     public void createDefaultPerson(String name, String type) throws DuplicateKeyException, IllegalInputException {
@@ -62,7 +62,7 @@ public class CharacterController {
         createMap();
     }
 
-    public void createEnemy() {
+    public void createEnemies() {
         enemies = new ArrayList<>();
 
         String[] names = {"Thanos", "Mysterio", "Hela"};

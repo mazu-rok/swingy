@@ -76,7 +76,7 @@ public class Person {
     protected int DEFAULT_HP;
 
     public void setExperience(int experience) {
-        for (int i = level;; i++) {
+        for (int i = level + 1;; i++) {
             if (experience < (i*1000 + Math.pow(i - 1, 2) * 450)) {
                 level = i - 1;
                 break;

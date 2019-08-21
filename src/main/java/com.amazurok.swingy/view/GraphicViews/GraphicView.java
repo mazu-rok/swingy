@@ -68,7 +68,7 @@ public class GraphicView implements WindowManager {
 
         Object[] options1 = {"Main menu", "Quit"};
 
-        int dialogResult = JOptionPane.showOptionDialog(graphicPlayView.getFrame(), "You lost!!!\nDo you want to continue?", "Game Over",
+        int dialogResult = JOptionPane.showOptionDialog(graphicPlayView.getFrame(), "You lost!!!", "Game Over",
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, options1, null);
         if (dialogResult == JOptionPane.YES_OPTION) {
@@ -99,7 +99,7 @@ public class GraphicView implements WindowManager {
     @Override
     public void displayForcedFightNotice() {
         String message = "Unfortunately you could not escape";
-        JOptionPane.showMessageDialog(graphicPlayView.getFrame(), message);
+        JOptionPane.showMessageDialog(null, message);
     }
 
     @Override

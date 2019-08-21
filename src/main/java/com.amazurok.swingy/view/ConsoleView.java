@@ -139,7 +139,6 @@ public class ConsoleView implements WindowManager {
                 displayError("Cannot create hero, please try again\n" + e.getMessage());
             }
         }
-        characterController.createEnemy();
         gamePlayController.handleInput("");
         gamePlayController.displayGame();
     }
