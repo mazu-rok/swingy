@@ -159,7 +159,7 @@ public class GraphicPlayView {
                 JButton button;
                 if (i == personCoordinates.getY() && j == personCoordinates.getX()) {
                     button = new JButton();
-                    button.setBackground(Color.GREEN);
+                    button.setBackground(Color.BLUE);
                 } else {
                     button = new JButton();
                     button.setBackground(Color.LIGHT_GRAY);
@@ -202,8 +202,8 @@ public class GraphicPlayView {
                         "\tHelm: %d\n" +
                         "\tWeapon: %d",
                 player.getName(), player.getType(), player.getLevel(), player.getExperience(), player.getAttack(),
-                player.getDefense(), player.getHp(), player.getArmor() != null ? player.getArmor().getPower() : 0,
-                player.getHelm() != null ? player.getHelm().getPower() : 0, player.getWeapon() != null ? player.getWeapon().getPower() : 0
+                player.getDefense(), player.getHp(), player.getArmor().getPower(), player.getHelm().getPower(),
+                player.getWeapon().getPower()
         );
         JOptionPane.showMessageDialog(null, line);
     }

@@ -62,6 +62,24 @@ public class ConsoleView implements WindowManager {
     @Override
     public void displayPlayerSelectionView(List<Person> heroes) {
         String input = "";
+        if (heroes.isEmpty()) {
+            clearScreen();
+            System.out.println(
+                    "\n*******************************************************\n" +
+                            "*                                                     *\n" +
+                            "*                    No saved heroes                  *\n" +
+                            "*                                                     *\n" +
+                            "*******************************************************\n"
+            );
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                log.error(e.getMessage());
+            }
+            gamePlayController.handleInput("b");
+            gamePlayController.displayGame();
+            return;
+        }
         while (!input.matches("\\d+$")) {
             clearScreen();
             System.out.println(
@@ -74,7 +92,7 @@ public class ConsoleView implements WindowManager {
             int index = 0;
             for (Person player : heroes) {
                 index++;
-                String line = String.format(
+                String heroInfo = String.format(
                         "%d. Name: %s\n" +
                                 "\tClass: %s\n" +
                                 "\tLevel: %d\n" +
@@ -85,7 +103,7 @@ public class ConsoleView implements WindowManager {
                         index, player.getName(), player.getType(), player.getLevel(), player.getExperience(), player.getAttack(),
                         player.getDefense(), player.getHp()
                 );
-                System.out.println(line);
+                System.out.println(heroInfo);
 
             }
             System.out.print(
@@ -274,8 +292,8 @@ public class ConsoleView implements WindowManager {
                             "\tHelm: %d\n" +
                             "\tWeapon: %d",
                     player.getName(), player.getType(), player.getLevel(), player.getExperience(), player.getAttack(),
-                    player.getDefense(), player.getHp(), player.getArmor() != null ? player.getArmor().getPower() : 0,
-                    player.getHelm() != null ? player.getHelm().getPower() : 0, player.getWeapon() != null ? player.getWeapon().getPower() : 0
+                    player.getDefense(), player.getHp(), player.getArmor().getPower(), player.getHelm().getPower(),
+                    player.getWeapon().getPower()
             );
             System.out.println(line);
             Thread.sleep(2000);

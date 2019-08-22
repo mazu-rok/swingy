@@ -26,14 +26,14 @@ public class GraphicCreateView {
     private JComboBox typeComboBox;
     private JLabel levelLabel = new JLabel("Level:");
     private JLabel attackLabel = new JLabel("Attack:");
-    private JLabel defLabel = new JLabel("Defense:");
+    private JLabel defenseLabel = new JLabel("Defense:");
     private JLabel hpLabel = new JLabel("HP");
     private JLabel errorLabel = new JLabel();
-    private JTextField nameText = new JTextField();
-    private JTextField levelText = new JTextField();
-    private JTextField attackText = new JTextField();
-    private JTextField defenseText = new JTextField();
-    private JTextField hpText = new JTextField();
+    private JTextField nameInput = new JTextField();
+    private JTextField levelInput = new JTextField();
+    private JTextField attackInput = new JTextField();
+    private JTextField defenseInput = new JTextField();
+    private JTextField hpInput = new JTextField();
 
     public GraphicCreateView(GamePlayController gamePlayController, CharacterController characterController) {
         this.gamePlayController = gamePlayController;
@@ -52,20 +52,20 @@ public class GraphicCreateView {
         headingLabel.setBounds(140, 10, 150, 20);
         errorLabel.setBounds(50, 17, 400, 60);
         errorLabel.setForeground(Color.red);
-        nameText.setBounds(180, 60, 150, 20);
+        nameInput.setBounds(180, 60, 150, 20);
         JLabel nameLabel = new JLabel("Hero name:");
         nameLabel.setBounds(40, 60, 100, 20);
         JLabel typeLabel = new JLabel("Hero type:");
         typeLabel.setBounds(40, 100, 100, 20);
         typeComboBox.setBounds(180, 100, 150, 20);
         levelLabel.setBounds(40, 140, 100, 20);
-        levelText.setBounds(180, 140, 150, 20);
+        levelInput.setBounds(180, 140, 150, 20);
         attackLabel.setBounds(40, 180, 100, 20);
-        attackText.setBounds(180, 180, 150, 20);
-        defLabel.setBounds(40, 220, 100, 20);
-        defenseText.setBounds(180, 220, 150, 20);
+        attackInput.setBounds(180, 180, 150, 20);
+        defenseLabel.setBounds(40, 220, 100, 20);
+        defenseInput.setBounds(180, 220, 150, 20);
         hpLabel.setBounds(40, 260, 150, 20);
-        hpText.setBounds(180, 260, 150, 20);
+        hpInput.setBounds(180, 260, 150, 20);
         defaultPerson.setBounds(40, 300, 140, 20);
         customPerson.setBounds(180, 300, 150, 20);
         btnBack.setBounds(50, 330, 130, 40);
@@ -74,24 +74,24 @@ public class GraphicCreateView {
 
         // Add to panel
         JPanel panel = new JPanel();
-        panel.add(btnBack);
-        panel.add(btnContinue);
+        panel.add(errorLabel);
         panel.add(customPerson);
         panel.add(defaultPerson);
         panel.add(headingLabel);
         panel.add(nameLabel);
-        panel.add(nameText);
+        panel.add(nameInput);
         panel.add(typeLabel);
         panel.add(typeComboBox);
         panel.add(levelLabel);
-        panel.add(levelText);
+        panel.add(levelInput);
         panel.add(attackLabel);
-        panel.add(attackText);
-        panel.add(defLabel);
-        panel.add(defenseText);
+        panel.add(attackInput);
+        panel.add(defenseLabel);
+        panel.add(defenseInput);
         panel.add(hpLabel);
-        panel.add(hpText);
-        panel.add(errorLabel);
+        panel.add(hpInput);
+        panel.add(btnBack);
+        panel.add(btnContinue);
 
         // Set up frame
         frame.setContentPane(panel);
@@ -107,33 +107,33 @@ public class GraphicCreateView {
     }
 
     private void hideAddictionalInfo() {
-        levelText.setVisible(false);
+        levelInput.setVisible(false);
         levelLabel.setVisible(false);
-        attackText.setVisible(false);
+        attackInput.setVisible(false);
         attackLabel.setVisible(false);
-        defenseText.setVisible(false);
-        defLabel.setVisible(false);
-        hpText.setVisible(false);
+        defenseInput.setVisible(false);
+        defenseLabel.setVisible(false);
+        hpInput.setVisible(false);
         hpLabel.setVisible(false);
         errorLabel.setVisible(false);
         frame.setResizable(false);
     }
 
     private void showAddictionalInfo() {
-        levelText.setVisible(true);
+        levelInput.setVisible(true);
         levelLabel.setVisible(true);
-        attackText.setVisible(true);
+        attackInput.setVisible(true);
         attackLabel.setVisible(true);
-        defenseText.setVisible(true);
-        defLabel.setVisible(true);
-        hpText.setVisible(true);
+        defenseInput.setVisible(true);
+        defenseLabel.setVisible(true);
+        hpInput.setVisible(true);
         hpLabel.setVisible(true);
         errorLabel.setVisible(true);
     }
 
     private boolean isInputValid(String level, String attack, String defense, String hp) {
-        if (!(level.matches("-?\\d+") && attack.matches("-?\\d+") && defense.matches("-?\\d+") &&
-                hp.matches("-?\\d+"))) {
+        if (!(level.matches("\\d+") && attack.matches("\\d+") && defense.matches("\\d+") &&
+                hp.matches("\\d+"))) {
             errorLabel.setText("Non-integer in level, attack, defense or hp");
             return false;
         }
@@ -145,11 +145,11 @@ public class GraphicCreateView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (customPerson.isSelected()) {
-                    if (!isInputValid(levelText.getText(), attackText.getText(), defenseText.getText(), hpText.getText())) {
+                    if (isInputValid(levelInput.getText(), attackInput.getText(), defenseInput.getText(), hpInput.getText())) {
                         try {
-                            characterController.createPerson(nameText.getText(), typeComboBox.getSelectedItem().toString(), Integer.parseInt(levelLabel.getText()),
-                                    Integer.parseInt(attackText.getText()), Integer.parseInt(defenseText.getText()),
-                                    Integer.parseInt(hpText.getText()));
+                            characterController.createPerson(nameInput.getText(), typeComboBox.getSelectedItem().toString(), Integer.parseInt(levelInput.getText()),
+                                    Integer.parseInt(attackInput.getText()), Integer.parseInt(defenseInput.getText()),
+                                    Integer.parseInt(hpInput.getText()));
                             gamePlayController.handleInput("");
                             gamePlayController.displayGame();
                         } catch (Exception ex) {
@@ -159,7 +159,7 @@ public class GraphicCreateView {
 
                 } else {
                     try {
-                        characterController.createDefaultPerson(nameText.getText(), typeComboBox.getSelectedItem().toString());
+                        characterController.createDefaultPerson(nameInput.getText(), typeComboBox.getSelectedItem().toString());
                         frame.dispose();
                         gamePlayController.handleInput("");
                         gamePlayController.displayGame();

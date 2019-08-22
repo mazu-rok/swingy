@@ -65,11 +65,11 @@ public class Person {
     @NonNull
     protected Coordinates coordinates;
 
-    protected Weapon weapon;
+    protected Weapon weapon = new Weapon(0);
 
-    protected Armor armor;
+    protected Armor armor = new Armor(0);
 
-    protected Helm helm;
+    protected Helm helm = new Helm(0);
 
     protected int DEFAULT_ATTACK;
     protected int DEFAULT_DEFENSE;

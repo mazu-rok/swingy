@@ -53,12 +53,12 @@ public class GraphicSelectionView {
         frame.setLocation(500, 500);
     }
 
-    private ArrayList<String> getHeroesTypesAndNames(List<Person> heroes) {
+    private ArrayList<String> getHeroesNamesAndTypes(List<Person> heroes) {
         ArrayList<String> details = new ArrayList<>();
         int index = 0;
         for (Person person : heroes) {
             index++;
-            String detail = index + ". " + person.getType() + " " + person.getName();
+            String detail = index + ". " + person.getName() + ", " + person.getType();
             details.add(detail);
         }
         return details;
@@ -118,8 +118,9 @@ public class GraphicSelectionView {
             btnContinue.setEnabled(false);
         else
             btnContinue.setEnabled(true);
-        ArrayList<String> options = getHeroesTypesAndNames(heroes);
+        ArrayList<String> options = getHeroesNamesAndTypes(heroes);
         checkboxOptions.setModel(new DefaultComboBoxModel<>(options.toArray()));
+        info.setText(getHeroDetails(heroes).get(0));
         startListeners(heroes);
         frame.setVisible(true);
     }

@@ -59,7 +59,6 @@ public class GamePlayController {
                 break;
             case FORCED_FIGHT:
                 windowManager.displayForcedFightNotice();
-
                 handleInput("");
                 displayGame();
                 break;
@@ -68,8 +67,6 @@ public class GamePlayController {
                 windowManager.displayFightReport(characterController.getWinner());
                 handleInput("");
                 displayGame();
-                break;
-            case RUN:
                 break;
             case ARTIFACT:
                 windowManager.displayArtifact(characterController.getLastArtifact());
@@ -135,7 +132,7 @@ public class GamePlayController {
                 if (input.equals("f")) {
                     stage = GameStage.FIGHT;
                 } else if (input.equals("r") && characterController.run()) {
-                    stage = GameStage.RUN;
+                    stage = GameStage.PLAY;
                 } else {
                     stage = GameStage.FORCED_FIGHT;
                 }
@@ -154,8 +151,6 @@ public class GamePlayController {
                     }
                     characterController.createMap();
                 }
-                break;
-            case RUN:
                 break;
             case ARTIFACT:
                 if (input.equals("y")) {

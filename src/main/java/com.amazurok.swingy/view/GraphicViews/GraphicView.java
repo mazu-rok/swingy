@@ -84,6 +84,7 @@ public class GraphicView implements WindowManager {
     public void displayQuitDialogue() {
         JOptionPane.showMessageDialog (graphicPlayView.getFrame(), "Goodbye!!!","Quite game", JOptionPane.INFORMATION_MESSAGE);
         graphicPlayView.getFrame().dispose();
+        System.exit(0);
     }
 
     @Override
